@@ -1,0 +1,1980 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mini Software A&B — V23.2</title>
+<style>
+:root{
+  --bg:#f5f6f8;--panel:#fff;--text:#172033;--muted:#667085;--border:#e6e9ef;
+  --primary:#821022;--primary2:#a81e35;--success:#067647;--successbg:#ecfdf3;
+  --warning:#b54708;--warningbg:#fff7ed;--danger:#b42318;--dangerbg:#fef3f2;
+  --info:#175cd3;--infobg:#eff8ff;--purple:#5925dc;--purplebg:#f4f3ff;
+  --shadow:0 10px 30px rgba(24,34,56,.07);
+}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.app{height:100vh;display:grid;grid-template-rows:68px 1fr;overflow:hidden}
+.header{background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 22px;z-index:10}
+.brand{display:flex;align-items:center;gap:13px}.logo{width:43px;height:43px;border-radius:13px;background:var(--primary);color:#fff;display:grid;place-items:center;font-weight:900;font-size:19px}
+.brand h1{font-size:19px;margin:0}.brand .sub{font-size:11px;color:var(--muted);margin-top:3px}
+.header-actions{display:flex;align-items:center;gap:9px}
+.btn{border:1px solid var(--border);background:#fff;color:var(--text);border-radius:10px;padding:10px 13px;font-size:12px;font-weight:800}
+.btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}.btn.primary:hover{background:#6f0b1b}
+.btn.danger{background:var(--dangerbg);border-color:#fecaca;color:var(--danger)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.shell{display:grid;grid-template-columns:330px 1fr;min-height:0}
+.sidebar{background:#fff;border-right:1px solid var(--border);display:grid;grid-template-rows:auto auto 1fr;min-height:0}
+.sidebar-top{padding:15px;border-bottom:1px solid var(--border)}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px}
+.kpi{border:1px solid var(--border);background:#fafbfc;border-radius:11px;padding:9px}.kpi b{display:block;font-size:20px}.kpi span{font-size:9px;color:var(--muted);text-transform:uppercase;font-weight:800}
+.search{width:100%;border:1px solid var(--border);border-radius:10px;padding:10px 11px;outline:none}
+.filters{padding:10px 15px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.filters select{width:100%;border:1px solid var(--border);border-radius:9px;padding:8px;font-size:11px;background:#fff}
+.open-filter{grid-column:1/-1;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.event-list{overflow:auto;padding:8px}
+.event-card{border:1px solid transparent;border-radius:12px;padding:11px;margin-bottom:6px;cursor:pointer;transition:.15s}
+.event-card:hover{background:#fafbfc;border-color:var(--border)}.event-card.active{background:#fff7f8;border-color:#e6aebb;box-shadow:0 3px 10px rgba(130,16,34,.06)}
+.event-card h3{font-size:12px;margin:0 0 5px}.event-card .meta{font-size:10px;color:var(--muted);line-height:1.45}
+.status{display:inline-flex;border-radius:999px;padding:5px 8px;font-size:9px;font-weight:900;margin-top:7px}
+.s-novo{background:#f2f4f7;color:#344054}.s-processando_contrato{background:var(--infobg);color:var(--info)}
+.s-aguardando_revisao{background:var(--warningbg);color:var(--warning)}.s-aguardando_cliente{background:var(--infobg);color:var(--info)}
+.s-aguardando_pos_degustacao,.s-relatorio_gerado{background:var(--purplebg);color:var(--purple)}
+.s-menu_final_e_os_gerados{background:var(--successbg);color:var(--success)}.s-erro{background:var(--dangerbg);color:var(--danger)}
+.main{overflow:auto;position:relative}
+.empty-state{height:100%;display:grid;place-items:center;text-align:center;color:var(--muted)}.empty-state .icon{font-size:44px;margin-bottom:12px}
+.workspace{padding:20px 24px 36px;max-width:1450px;margin:0 auto}
+.event-header{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:16px}
+.event-title h2{font-size:24px;margin:0 0 5px}.event-title .id{font-size:11px;color:var(--muted)}
+.quick-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.stepper{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:14px 0 18px}
+.step{background:#fff;border:1px solid var(--border);border-radius:12px;padding:10px 12px;position:relative}
+.step .n{width:23px;height:23px;border-radius:50%;display:grid;place-items:center;background:#f2f4f7;color:#667085;font-size:10px;font-weight:900;margin-bottom:6px}
+.step .label{font-size:10px;font-weight:800}.step.done .n{background:var(--success);color:#fff}.step.current{border-color:#d594a1;background:#fffafb}.step.current .n{background:var(--primary);color:#fff}
+.primary-card{background:linear-gradient(135deg,#7f0d20,#a71d35);color:#fff;border-radius:17px;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:15px;box-shadow:var(--shadow)}
+.primary-card h3{margin:0 0 4px;font-size:15px}.primary-card p{margin:0;font-size:11px;opacity:.82}.primary-card .btn{border-color:rgba(255,255,255,.25);white-space:nowrap}
+.tabs{display:flex;gap:5px;background:#eceff3;padding:4px;border-radius:11px;width:max-content;margin-bottom:14px}
+.tab{border:none;background:transparent;padding:8px 12px;border-radius:8px;font-size:11px;font-weight:800;color:var(--muted)}
+.tab.active{background:#fff;color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.panel{background:#fff;border:1px solid var(--border);border-radius:16px;padding:17px;box-shadow:var(--shadow);margin-bottom:13px}
+.panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:13px}.panel-head h3{margin:0;font-size:14px}.panel-head p{margin:3px 0 0;font-size:10px;color:var(--muted)}
+.info-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.info{background:#fafbfc;border:1px solid #edf0f4;border-radius:10px;padding:10px}.info strong{display:block;font-size:9px;color:var(--muted);text-transform:uppercase;margin-bottom:5px}.info div{font-size:11px;word-break:break-word}
+.alert{border-radius:11px;padding:12px;font-size:11px;line-height:1.5;white-space:pre-wrap}.alert.warning{background:var(--warningbg);border:1px solid #fed7aa;color:#9a3412}.alert.error{background:var(--dangerbg);border:1px solid #fecaca;color:#991b1b}
+.link-grid{display:flex;gap:7px;flex-wrap:wrap}.link-pill{border:1px solid #ead4d8;background:#fff7f8;color:var(--primary);border-radius:999px;padding:7px 10px;text-decoration:none;font-size:10px;font-weight:800}
+.table-wrap{overflow:auto;border:1px solid var(--border);border-radius:11px}.data-table{width:100%;border-collapse:collapse;min-width:850px}.data-table th{background:#fafbfc;text-align:left;color:var(--muted);font-size:9px;text-transform:uppercase;padding:9px;border-bottom:1px solid var(--border);position:sticky;top:0}.data-table td{font-size:10px;padding:8px 9px;border-bottom:1px solid #eef1f5;vertical-align:top}.data-table input,.data-table select{width:100%;border:1px solid var(--border);border-radius:7px;padding:6px;font-size:10px;background:#fff}
+.header-editor{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.header-field label{display:block;font-size:9px;text-transform:uppercase;color:var(--muted);font-weight:800;margin-bottom:4px}.header-field input{width:100%;border:1px solid var(--border);border-radius:8px;padding:8px;font-size:10px}
+.log-item{border-left:3px solid #d0d5dd;padding:8px 10px;margin-bottom:8px;background:#fafbfc;border-radius:0 9px 9px 0}.log-item.error{border-color:var(--danger)}.log-item.warn{border-color:var(--warning)}.log-item .top{display:flex;justify-content:space-between;gap:10px;font-size:9px;color:var(--muted);margin-bottom:4px}.log-item .msg{font-size:10px;white-space:pre-wrap}
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.48);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}.modal.show{display:flex}.modal-card{width:min(720px,96vw);max-height:92vh;overflow:auto;background:#fff;border-radius:18px;padding:20px;box-shadow:0 30px 80px rgba(0,0,0,.22)}.modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:15px}.modal-head h2{font-size:19px;margin:0}.modal-head p{font-size:10px;color:var(--muted);margin:4px 0 0}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{margin-bottom:10px}.field.full{grid-column:1/-1}.field label{display:block;font-size:9px;text-transform:uppercase;color:var(--muted);font-weight:800;margin-bottom:5px}.field input{width:100%;border:1px solid var(--border);border-radius:9px;padding:10px;font-size:11px}.checkline{display:flex;align-items:flex-start;gap:7px;background:#fafbfc;border:1px solid var(--border);border-radius:10px;padding:10px;font-size:10px;color:var(--muted)}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:15px;padding-top:13px;border-top:1px solid var(--border)}
+.processing{position:fixed;inset:0;background:rgba(246,248,251,.94);display:none;z-index:200;align-items:center;justify-content:center}.processing.show{display:flex}.processing-card{width:min(600px,90vw);background:#fff;border:1px solid var(--border);border-radius:19px;padding:24px;box-shadow:0 25px 70px rgba(20,32,50,.15)}.processing-icon{width:52px;height:52px;border:5px solid #f3dce1;border-top-color:var(--primary);border-radius:50%;animation:spin .9s linear infinite;margin-bottom:16px}@keyframes spin{to{transform:rotate(360deg)}}.processing h2{font-size:18px;margin:0 0 6px}.processing .stage{font-size:12px;color:var(--primary);font-weight:800;margin-top:13px}.processing .detail{font-size:10px;color:var(--muted);margin-top:4px;min-height:15px}.progress-track{height:9px;border-radius:999px;background:#eef0f4;overflow:hidden;margin:18px 0 10px}.progress-bar{height:100%;width:3%;background:linear-gradient(90deg,var(--primary),var(--primary2));transition:width .35s}.time-row{display:flex;justify-content:space-between;font-size:10px;color:var(--muted)}.toast{position:fixed;right:20px;bottom:20px;z-index:300;background:#101828;color:#fff;border-radius:11px;padding:12px 15px;font-size:10px;font-weight:800;display:none;max-width:440px}
+
+.refresh-state{font-size:10px;color:#667085;display:flex;align-items:center;gap:6px}.sync-dot{width:7px;height:7px;border-radius:50%;background:#12b76a}.sync-dot.busy{background:#f79009;animation:pulse 1s infinite}@keyframes pulse{50%{opacity:.35}}
+.close-event{color:#475467;background:#f8fafc}.post-flow{display:grid;grid-template-columns:1fr 36px 1fr;gap:10px;align-items:stretch;width:100%}.post-step{border-radius:13px;padding:13px 14px;background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.18)}.post-step.locked{background:#525866;border-color:#656b78;color:#d5d9e0}.post-step.ready{background:rgba(255,255,255,.14)}.post-step.done{background:rgba(6,118,71,.26);border-color:rgba(190,255,220,.28)}.post-step .step-title{font-size:12px;font-weight:900;margin-bottom:4px}.post-step .step-sub{font-size:10px;opacity:.84;min-height:26px}.post-arrow{display:grid;place-items:center;font-size:19px;font-weight:900;opacity:.7}.post-step button{margin-top:9px;width:100%}.post-step.locked button{background:#6b7280!important;border-color:#6b7280!important;color:#d1d5db!important;cursor:not-allowed}.file-list{display:grid;gap:9px}.file-row{display:grid;grid-template-columns:minmax(160px,1.1fr) 2fr auto;gap:12px;align-items:center;border:1px solid var(--border);border-radius:11px;padding:11px;background:#fafbfc}.file-row .name{font-size:11px;font-weight:900}.file-row .hint{font-size:9px;color:var(--muted);margin-top:3px}.file-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.btn.tiny{padding:7px 9px;font-size:10px}.btn.pdf-update{border-color:#d8b5bc;color:var(--primary);background:#fff}.auto-note{font-size:9px;color:#98a2b3;margin-left:4px}
+
+
+.lazy-loading{padding:34px;text-align:center;color:#98a2b3;font-size:11px}.lazy-loading:before{content:'';display:block;width:28px;height:28px;border:3px solid #eee2e5;border-top-color:var(--primary);border-radius:50%;margin:0 auto 10px;animation:spin .8s linear infinite}
+.aditivo-entry{display:grid;grid-template-columns:1fr 210px auto;gap:9px;align-items:end}.aditivo-entry .field{margin:0}.field select,.field textarea{width:100%;border:1px solid var(--border);border-radius:9px;padding:10px;font-size:11px;background:#fff}.field textarea{min-height:72px;resize:vertical}
+.aditivo-list{display:grid;gap:10px}.aditivo-card{border:1px solid var(--border);border-radius:13px;padding:13px;background:#fafbfc}.aditivo-card.aplicado{border-color:#abefc6;background:#f6fef9}.aditivo-card.analisado{border-color:#fedf89;background:#fffcf5}.aditivo-card.erro,.aditivo-card.rejeitado{border-color:#fecdca;background:#fffafa}
+.aditivo-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.aditivo-title{font-size:12px;font-weight:900}.aditivo-meta{font-size:9px;color:var(--muted);margin-top:3px}.badge{display:inline-flex;border-radius:999px;padding:5px 8px;font-size:9px;font-weight:900}.badge.ok{background:var(--successbg);color:var(--success)}.badge.warn{background:var(--warningbg);color:var(--warning)}.badge.bad{background:var(--dangerbg);color:var(--danger)}.badge.neutral{background:#f2f4f7;color:#475467}
+.impact-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:10px 0}.impact-box{border:1px solid var(--border);border-radius:9px;padding:8px;background:#fff}.impact-box b{font-size:14px;display:block}.impact-box span{font-size:8px;color:var(--muted);text-transform:uppercase;font-weight:800}
+.change-list{display:grid;gap:6px;margin-top:9px}.change-row{background:#fff;border:1px solid var(--border);border-radius:9px;padding:8px;font-size:10px;line-height:1.4}.change-row b{color:var(--primary)}
+.aditivo-actions{display:flex;gap:7px;justify-content:flex-end;margin-top:10px}.notice{font-size:10px;color:var(--muted);line-height:1.45}
+.optimistic{opacity:.72}.tab-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#f79009;margin-left:5px;vertical-align:middle}
+
+@media(max-width:1050px){.shell{grid-template-columns:280px 1fr}.info-grid{grid-template-columns:repeat(2,1fr)}.header-editor{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="header">
+    <div class="brand">
+      <div class="logo">A&B</div>
+      <div>
+        <h1>Mini Software A&B</h1>
+        <div class="sub">Contratos → Degustação → Menu Final → OS</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <span id="versionLabel" style="font-size:10px;color:#98a2b3">Conectando...</span>
+      <span class="refresh-state" id="refreshState"><span class="sync-dot" id="syncDot"></span><span id="syncText">Sincronizando</span></span>
+      <button class="btn" id="refreshBtn">Atualizar</button>
+      <button class="btn primary" id="newBtn" disabled>+ Novo evento</button>
+    </div>
+  </header>
+
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <div class="kpis" id="kpis"></div>
+        <input class="search" id="searchInput" placeholder="Buscar evento, ID, contratante...">
+      </div>
+      <div class="filters">
+        <select id="statusFilter"><option value="">Todos os status</option></select>
+        <select id="respFilter"><option value="">Todos responsáveis</option></select>
+        <label class="open-filter"><input type="checkbox" id="openOnly" checked> Mostrar somente eventos abertos</label>
+      </div>
+      <div class="event-list" id="eventList"></div>
+    </aside>
+
+    <main class="main">
+      <div class="empty-state" id="emptyState">
+        <div>
+          <div class="icon">◫</div>
+          <h2 style="margin:0 0 6px;color:#344054">Selecione um evento</h2>
+          <div style="font-size:11px">Tudo que você precisa para operar o evento ficará nesta tela.</div>
+        </div>
+      </div>
+      <div class="workspace hidden" id="workspace">
+        <div class="event-header">
+          <div class="event-title">
+            <h2 id="eventTitle"></h2>
+            <div class="id" id="eventId"></div>
+          </div>
+          <div class="quick-actions">
+            <button class="btn close-event" id="closeEventBtn">← Voltar / fechar evento</button>
+            <a class="btn" id="sheetRowLink" target="_blank">Abrir linha na planilha</a>
+            <a class="btn" id="folderLink" target="_blank">Pasta do evento</a>
+          </div>
+        </div>
+
+        <div class="stepper" id="stepper"></div>
+
+        <div class="primary-card" id="primaryCard">
+          <div id="primarySingle" style="display:flex;align-items:center;justify-content:space-between;gap:20px;width:100%">
+            <div>
+              <h3 id="primaryTitle"></h3>
+              <p id="primaryText"></p>
+            </div>
+            <button class="btn" id="primaryBtn"></button>
+          </div>
+          <div class="post-flow hidden" id="postFlow">
+            <div class="post-step" id="postFormStep">
+              <div class="step-title">1. Form Interno</div>
+              <div class="step-sub" id="postFormStatus">Aguardando formulário.</div>
+              <button class="btn" id="openInternalFormBtn">Abrir Form Interno</button>
+              <button class="btn tiny hidden" id="recreateInternalFormBtn" style="margin-top:6px">Recriar Form Interno</button>
+            </div>
+            <div class="post-arrow">→</div>
+            <div class="post-step locked" id="postGenerateStep">
+              <div class="step-title">2. Menu Final + OS</div>
+              <div class="step-sub" id="postGenerateStatus">Libera após o preenchimento do Form Interno.</div>
+              <button class="btn" id="generateFinalBtn" disabled>Gerar Menu Final + OS</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="tabs">
+          <button class="tab active" data-tab="overview">Visão geral</button>
+          <button class="tab" data-tab="review">Revisão da extração</button>
+          <button class="tab" data-tab="files">Arquivos</button>
+          <button class="tab" data-tab="additives">Aditivos</button>
+          <button class="tab" data-tab="history">Erros & histórico</button>
+        </div>
+
+        <section id="tab-overview" class="tab-content"></section>
+        <section id="tab-review" class="tab-content hidden"></section>
+        <section id="tab-files" class="tab-content hidden"></section>
+        <section id="tab-additives" class="tab-content hidden"></section>
+        <section id="tab-history" class="tab-content hidden"></section>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div class="modal" id="newModal">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div><h2>Novo evento</h2><p>O evento é criado diretamente na aba EVENTOS. Não existe mais rascunho.</p></div>
+      <button class="btn" id="closeNewBtn">Fechar</button>
+    </div>
+    <div class="form-grid">
+      <div class="field full"><label>Link do contrato *</label><input id="fContrato" placeholder="Link do PDF no Google Drive"></div>
+      <div class="field full"><label>Link da pasta do evento *</label><input id="fPasta" placeholder="Link da pasta no Google Drive"></div>
+      <div class="field full"><label>Responsável de produção *</label><input id="fResp" placeholder="Ex.: Deisy e Patricia"></div>
+      <div class="field"><label>Data da degustação *</label><input id="fData" type="date"></div>
+      <div class="field"><label>Horário *</label><input id="fHorario" placeholder="Ex.: 14h"></div>
+      <div class="field"><label>Local *</label><input id="fLocal" placeholder="Ex.: TRIO ONE"></div>
+      <div class="field"><label>Pax *</label><input id="fPax" type="number" min="1" placeholder="6"></div>
+      <label class="checkline full"><input type="checkbox" id="fExtract" checked><span><b>Criar e já extrair o contrato.</b><br>O sistema cria o evento primeiro e depois inicia a extração com indicador de progresso.</span></label>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" id="cancelNewBtn">Cancelar</button>
+      <button class="btn primary" id="createBtn">Criar evento</button>
+    </div>
+  </div>
+</div>
+
+<div class="processing" id="processing">
+  <div class="processing-card">
+    <div class="processing-icon"></div>
+    <h2 id="processingTitle">Processando...</h2>
+    <div class="stage" id="processingStage">Iniciando</div>
+    <div class="detail" id="processingDetail"></div>
+    <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+    <div class="time-row">
+      <span id="elapsedTime">Tempo decorrido: 0s</span>
+      <span id="etaTime">Estimativa: —</span>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+
+<script>
+const FRONT_VERSION='23.2';
+
+let state={
+  eventos:[],
+  resumo:{},
+  responsaveis:[],
+  statusDisponiveis:[],
+  estimativas:{},
+};
+
+let selectedId='';
+let currentWorkspace=null;
+let editingReview=false;
+let activeTab='overview';
+
+let lazyData={
+  review:null,
+  history:null,
+  additives:null,
+};
+
+let lazyLoading={
+  review:false,
+  history:false,
+  additives:false,
+};
+
+let timerInterval=null;
+let progressInterval=null;
+let operationStart=0;
+let autoSyncInterval=null;
+let autoSyncTick=0;
+let lastSyncAt=0;
+
+document.addEventListener('DOMContentLoaded',()=>{
+  bindEvents();
+  healthcheck();
+});
+
+function bindEvents(){
+  byId('newBtn').onclick=openNew;
+  byId('refreshBtn').onclick=()=>refreshAll(true);
+  byId('closeEventBtn').onclick=closeSelectedEvent;
+  byId('closeNewBtn').onclick=closeNew;
+  byId('cancelNewBtn').onclick=closeNew;
+  byId('createBtn').onclick=createEvent;
+  byId('searchInput').addEventListener('input',debounce(loadEvents,250));
+  byId('statusFilter').onchange=loadEvents;
+  byId('respFilter').onchange=loadEvents;
+  byId('openOnly').onchange=loadEvents;
+  byId('primaryBtn').onclick=runPrimaryAction;
+  byId('openInternalFormBtn').onclick=openInternalForm;
+  byId('recreateInternalFormBtn').onclick=recreateInternalForm;
+  byId('generateFinalBtn').onclick=()=>runOperation('GERAR_FINAL_OS');
+
+  document.querySelectorAll('.tab').forEach(
+    btn=>btn.onclick=()=>switchTab(btn.dataset.tab)
+  );
+}
+
+function healthcheck(){
+  google.script.run
+    .withSuccessHandler(data=>{
+      if(!data||String(data.version)!==FRONT_VERSION){
+        toast(
+          `Versão incompatível. HTML ${FRONT_VERSION} / backend ${(data&&data.version)||'não encontrado'}.`,
+          true
+        );
+        return;
+      }
+
+      byId('versionLabel').textContent=`V${FRONT_VERSION} • conectado`;
+      byId('newBtn').disabled=false;
+      loadInitial();
+    })
+    .withFailureHandler(err=>
+      toast('Falha ao conectar ao backend: '+errMsg(err),true)
+    )
+    .apiHealthcheckFrontAB();
+}
+
+function loadInitial(){
+  setSyncState(true,'Carregando...');
+
+  google.script.run
+    .withSuccessHandler(data=>{
+      state=data||{};
+      normalizeState();
+      renderFilters();
+      renderKpis();
+      renderEvents();
+      markSynced();
+      startAutoSync();
+    })
+    .withFailureHandler(handleError)
+    .apiPainelInicialAB();
+}
+
+function normalizeState(){
+  state.eventos=Array.isArray(state.eventos)?state.eventos:[];
+  state.responsaveis=Array.isArray(state.responsaveis)?state.responsaveis:[];
+  state.statusDisponiveis=Array.isArray(state.statusDisponiveis)?state.statusDisponiveis:[];
+  state.resumo=state.resumo||{};
+  state.estimativas=state.estimativas||{};
+}
+
+function refreshAll(showFeedback=false){
+  const btn=byId('refreshBtn');
+
+  if(showFeedback){
+    btn.disabled=true;
+    btn.textContent='Atualizando...';
+  }
+
+  setSyncState(true,'Atualizando...');
+
+  google.script.run
+    .withSuccessHandler(data=>{
+      state=data||{};
+      normalizeState();
+      renderFilters();
+      renderKpis();
+      renderEvents();
+
+      if(selectedId){
+        refreshSelectedShell(()=>{
+          finishRefresh(showFeedback,btn);
+        });
+      }else{
+        finishRefresh(showFeedback,btn);
+      }
+    })
+    .withFailureHandler(err=>{
+      if(showFeedback){
+        btn.disabled=false;
+        btn.textContent='Atualizar';
+      }
+      handleError(err);
+    })
+    .apiPainelInicialAB();
+}
+
+function finishRefresh(showFeedback,btn){
+  markSynced();
+
+  if(showFeedback){
+    btn.disabled=false;
+    btn.textContent='Atualizar';
+    toast('Painel atualizado.');
+  }
+}
+
+function refreshSelectedShell(callback){
+  if(!selectedId){
+    if(callback)callback();
+    return;
+  }
+
+  const id=selectedId;
+
+  google.script.run
+    .withSuccessHandler(ws=>{
+      if(selectedId!==id)return;
+
+      currentWorkspace=ws;
+      renderWorkspace(ws);
+
+      if(callback)callback();
+    })
+    .withFailureHandler(err=>{
+      if(callback)callback();
+      handleError(err);
+    })
+    .apiObterEventoShellAB(id);
+}
+
+function renderKpis(){
+  const r=state.resumo||{};
+
+  const data=[
+    ['Revisão',r.aguardandoRevisao||0],
+    ['Cliente',r.aguardandoCliente||0],
+    ['Pós',r.posDegustacao||0],
+    ['Erros',r.erros||0],
+    ['Hoje',r.hoje||0],
+    ['Atrasados',r.atrasados||0],
+  ];
+
+  byId('kpis').innerHTML=data.map(
+    ([l,v])=>`<div class="kpi"><b>${v}</b><span>${esc(l)}</span></div>`
+  ).join('');
+}
+
+function renderFilters(){
+  const s=byId('statusFilter');
+  const r=byId('respFilter');
+
+  const sv=s.value;
+  const rv=r.value;
+
+  s.innerHTML=
+    '<option value="">Todos os status</option>'+
+    state.statusDisponiveis.map(
+      v=>`<option value="${attr(v)}">${esc(statusLabel(v))}</option>`
+    ).join('');
+
+  r.innerHTML=
+    '<option value="">Todos responsáveis</option>'+
+    state.responsaveis.map(
+      v=>`<option value="${attr(v)}">${esc(v)}</option>`
+    ).join('');
+
+  s.value=sv;
+  r.value=rv;
+}
+
+function filters(){
+  return{
+    busca:byId('searchInput').value||'',
+    status:byId('statusFilter').value||'',
+    responsavel:byId('respFilter').value||'',
+    somenteAbertos:byId('openOnly').checked,
+    limite:400,
+  };
+}
+
+function loadEvents(callback){
+  google.script.run
+    .withSuccessHandler(events=>{
+      state.eventos=Array.isArray(events)?events:[];
+      renderEvents();
+      if(callback)callback();
+    })
+    .withFailureHandler(handleError)
+    .apiListarEventosPainelAB(filters());
+}
+
+function renderEvents(){
+  const list=byId('eventList');
+
+  if(!state.eventos.length){
+    list.innerHTML=
+      '<div style="padding:25px 12px;text-align:center;color:#98a2b3;font-size:11px">Nenhum evento encontrado.</div>';
+    return;
+  }
+
+  list.innerHTML=state.eventos.map(ev=>`
+    <div class="event-card ${ev.idEvento===selectedId?'active':''}" data-id="${attr(ev.idEvento)}">
+      <h3>${esc(ev.nomeEvento||ev.idEvento)}</h3>
+      <div class="meta">
+        ${esc(ev.dataDegustacao||'-')} • ${esc(ev.horarioDegustacao||'')}<br>
+        ${esc(ev.respProducao||'-')}
+      </div>
+      ${statusBadge(ev.status)}
+    </div>
+  `).join('');
+
+  list.querySelectorAll('.event-card').forEach(
+    card=>card.onclick=()=>selectEvent(card.dataset.id,true)
+  );
+}
+
+/* =========================================================
+ * NAVEGAÇÃO RÁPIDA / LAZY LOADING
+ * ========================================================= */
+
+function selectEvent(id,preserveTab=true){
+  selectedId=id;
+  editingReview=false;
+
+  lazyData={
+    review:null,
+    history:null,
+    additives:null,
+  };
+
+  lazyLoading={
+    review:false,
+    history:false,
+    additives:false,
+  };
+
+  if(!preserveTab){
+    activeTab='overview';
+  }
+
+  renderEvents();
+
+  const preview=state.eventos.find(
+    ev=>ev.idEvento===id
+  );
+
+  if(preview){
+    renderOptimisticEvent(preview);
+  }
+
+  setSyncState(true,'Sincronizando evento...');
+
+  google.script.run
+    .withSuccessHandler(ws=>{
+      if(selectedId!==id)return;
+
+      currentWorkspace=ws;
+      renderWorkspace(ws);
+      markSynced();
+    })
+    .withFailureHandler(handleError)
+    .apiObterEventoShellAB(id);
+}
+
+function renderOptimisticEvent(ev){
+  byId('emptyState').classList.add('hidden');
+  byId('workspace').classList.remove('hidden');
+  byId('workspace').classList.add('optimistic');
+
+  byId('eventTitle').textContent=ev.nomeEvento||ev.idEvento;
+  byId('eventId').textContent=
+    `${ev.idEvento||''} • ${statusLabel(ev.status)} • ${ev.respProducao||'-'}`;
+
+  byId('sheetRowLink').href='#';
+  byId('folderLink').href='#';
+
+  renderStepper(ev.status);
+
+  byId('primarySingle').classList.remove('hidden');
+  byId('postFlow').classList.add('hidden');
+  byId('primaryTitle').textContent='Abrindo evento...';
+  byId('primaryText').textContent='A ficha básica já foi selecionada. Sincronizando os dados atuais.';
+  byId('primaryBtn').textContent='Carregando';
+  byId('primaryBtn').disabled=true;
+
+  renderOverview(ev);
+  renderFiles(ev);
+
+  switchTab(activeTab,false);
+}
+
+function renderWorkspace(ws){
+  const ev=ws.evento||{};
+
+  byId('workspace').classList.remove('optimistic');
+  byId('emptyState').classList.add('hidden');
+  byId('workspace').classList.remove('hidden');
+
+  byId('eventTitle').textContent=ev.nomeEvento||ev.idEvento;
+  byId('eventId').textContent=
+    `${ev.idEvento||''} • ${statusLabel(ev.status)} • ${ev.respProducao||'-'}`;
+
+  byId('sheetRowLink').href=ev.linkLinhaPlanilha||'#';
+  byId('folderLink').href=ev.linkPastaEvento||'#';
+
+  renderStepper(ev.status);
+  renderPrimary(ws.proximaAcao,ev,ws.formInterno||{});
+  renderOverview(ev);
+  renderFiles(ev);
+
+  switchTab(activeTab,false);
+  ensureTabLoaded(activeTab);
+}
+
+function switchTab(name,load=true){
+  activeTab=name;
+
+  document.querySelectorAll('.tab').forEach(
+    t=>t.classList.toggle('active',t.dataset.tab===name)
+  );
+
+  document.querySelectorAll('.tab-content').forEach(
+    t=>t.classList.add('hidden')
+  );
+
+  const section=byId('tab-'+name);
+  if(section)section.classList.remove('hidden');
+
+  if(load){
+    ensureTabLoaded(name);
+  }
+}
+
+function ensureTabLoaded(name,force=false){
+  if(!selectedId)return;
+
+  if(name==='overview'||name==='files'){
+    return;
+  }
+
+  if(name==='review'){
+    if(lazyData.review&&!force){
+      renderReview(lazyData.review);
+      return;
+    }
+
+    if(lazyLoading.review)return;
+
+    lazyLoading.review=true;
+    byId('tab-review').innerHTML=
+      '<div class="panel"><div class="lazy-loading">Carregando extração somente agora...</div></div>';
+
+    google.script.run
+      .withSuccessHandler(data=>{
+        if(!selectedId)return;
+        lazyLoading.review=false;
+        lazyData.review=data||{};
+        renderReview(lazyData.review);
+      })
+      .withFailureHandler(err=>{
+        lazyLoading.review=false;
+        byId('tab-review').innerHTML=
+          `<div class="alert error">${esc(errMsg(err))}</div>`;
+      })
+      .apiObterRevisaoExtracaoAB(selectedId);
+
+    return;
+  }
+
+  if(name==='history'){
+    if(lazyData.history&&!force){
+      renderHistory(lazyData.history);
+      return;
+    }
+
+    if(lazyLoading.history)return;
+
+    lazyLoading.history=true;
+    byId('tab-history').innerHTML=
+      '<div class="panel"><div class="lazy-loading">Carregando histórico...</div></div>';
+
+    google.script.run
+      .withSuccessHandler(data=>{
+        lazyLoading.history=false;
+        lazyData.history=Array.isArray(data)?data:[];
+        renderHistory(lazyData.history);
+      })
+      .withFailureHandler(err=>{
+        lazyLoading.history=false;
+        byId('tab-history').innerHTML=
+          `<div class="alert error">${esc(errMsg(err))}</div>`;
+      })
+      .apiObterHistoricoEventoAB(selectedId);
+
+    return;
+  }
+
+  if(name==='additives'){
+    if(lazyData.additives&&!force){
+      renderAdditives(lazyData.additives);
+      return;
+    }
+
+    if(lazyLoading.additives)return;
+
+    lazyLoading.additives=true;
+    byId('tab-additives').innerHTML=
+      '<div class="panel"><div class="lazy-loading">Carregando aditivos...</div></div>';
+
+    google.script.run
+      .withSuccessHandler(data=>{
+        lazyLoading.additives=false;
+        lazyData.additives=data||{
+          workflow:[],
+          aplicados:[],
+          linksAtuais:[],
+        };
+        renderAdditives(lazyData.additives);
+      })
+      .withFailureHandler(err=>{
+        lazyLoading.additives=false;
+        byId('tab-additives').innerHTML=
+          `<div class="alert error">${esc(errMsg(err))}</div>`;
+      })
+      .apiObterAditivosEventoAB(selectedId);
+  }
+}
+
+function renderStepper(status){
+  const steps=[
+    ['Contrato',['NOVO','PROCESSANDO_CONTRATO']],
+    ['Revisão',['AGUARDANDO_REVISAO']],
+    ['Cliente',['AGUARDANDO_CLIENTE']],
+    ['Pós-degustação',['RELATORIO_GERADO','AGUARDANDO_POS_DEGUSTACAO']],
+    ['Finalizado',['MENU_FINAL_E_OS_GERADOS']],
+  ];
+
+  const normalized=String(status||'').toUpperCase();
+  let current=steps.findIndex(([,vals])=>vals.includes(normalized));
+
+  if(normalized==='ERRO'){
+    const action=
+      (currentWorkspace&&currentWorkspace.proximaAcao&&currentWorkspace.proximaAcao.acao)||'';
+
+    current=
+      action==='EXTRACAO'?0:
+      action==='GERAR_ESCOLHA_FORM'?1:
+      action==='REPROCESSAR_CLIENTE'?2:
+      action==='GERAR_FINAL_OS'?3:0;
+  }
+
+  if(current<0)current=0;
+
+  byId('stepper').innerHTML=steps.map(([label],i)=>`
+    <div class="step ${i<current?'done':''} ${i===current?'current':''}">
+      <div class="n">${i<current?'✓':i+1}</div>
+      <div class="label">${esc(label)}</div>
+    </div>
+  `).join('');
+}
+
+function renderPrimary(next,ev,formInterno){
+  next=next||{};
+  formInterno=formInterno||{};
+
+  const action=next.acao||'';
+  const single=byId('primarySingle');
+  const post=byId('postFlow');
+
+  if(action==='POS_DEGUSTACAO'){
+    single.classList.add('hidden');
+    post.classList.remove('hidden');
+
+    const formStep=byId('postFormStep');
+    const genStep=byId('postGenerateStep');
+    const openBtn=byId('openInternalFormBtn');
+    const genBtn=byId('generateFinalBtn');
+    const recreateBtn=byId('recreateInternalFormBtn');
+
+    recreateBtn.classList.toggle(
+      'hidden',
+      !formInterno.existe||!!formInterno.respondido
+    );
+
+    openBtn.disabled=!formInterno.url;
+    formStep.className=
+      'post-step '+(formInterno.respondido?'done':'ready');
+
+    if(formInterno.respondido){
+      byId('postFormStatus').textContent=
+        `Respondido${formInterno.ultimaRespostaEm?' em '+formInterno.ultimaRespostaEm:''}. Você pode abrir novamente para conferir.`;
+
+      genStep.className='post-step ready';
+      genBtn.disabled=false;
+      byId('postGenerateStatus').textContent=
+        'Form Interno recebido. Etapa liberada para gerar os documentos finais.';
+    }else{
+      byId('postFormStatus').textContent=
+        formInterno.existe
+          ?'Aguardando preenchimento pela Produção.'
+          :'Form Interno ainda não foi criado.';
+
+      genStep.className='post-step locked';
+      genBtn.disabled=true;
+      byId('postGenerateStatus').textContent=
+        'Bloqueado até o Form Interno receber uma resposta.';
+    }
+
+    return;
+  }
+
+  post.classList.add('hidden');
+  single.classList.remove('hidden');
+
+  const btn=byId('primaryBtn');
+
+  let title='';
+  let text='';
+  let label=next.label||'Abrir evento';
+
+  if(action==='EXTRACAO'){
+    title='Extrair contrato';
+    text='A IA irá ler contrato e aditivos e trazer toda a extração para revisão dentro do software.';
+  }else if(action==='GERAR_ESCOLHA_FORM'){
+    title='Extração pronta para aprovação';
+    text='Revise os dados. Quando estiver tudo correto, gere a Escolha de Menu e o Formulário do Cliente.';
+  }else if(action==='AGUARDAR_CLIENTE'){
+    title='Aguardando resposta do cliente';
+    text='O formulário já foi criado. O sistema acompanha a resposta automaticamente.';
+    label='Abrir Form Cliente';
+  }else if(action==='REPROCESSAR_CLIENTE'){
+    title='Falha no processamento da resposta';
+    text='O sistema pode tentar novamente sem selecionar nenhuma linha na planilha.';
+    label='Tentar novamente';
+  }else if(action==='AGUARDAR_FORM_INTERNO'){
+    title='Form Interno pendente';
+    text='Abra o Form Interno, preencha e aguarde a liberação automática da próxima etapa.';
+    label='Abrir Form Interno';
+  }else if(action==='GERAR_FINAL_OS'){
+    title='Form Interno recebido';
+    text='A resposta está disponível. Gere Menu Final + OS.';
+    label='Gerar Menu Final + OS';
+  }else if(action==='FINALIZADO'){
+    title='Evento finalizado';
+    text='Menu Final e OS já foram gerados.';
+    label='Abrir OS';
+  }else if(action==='DIAGNOSTICO'){
+    title='Evento precisa de atenção';
+    text='Abra Erros & histórico para entender a última falha.';
+    label='Ver histórico';
+  }else{
+    title='Evento';
+    text='Selecione uma ação.';
+  }
+
+  byId('primaryTitle').textContent=title;
+  byId('primaryText').textContent=text;
+  btn.textContent=label;
+  btn.dataset.action=action;
+  btn.disabled=false;
+
+  if(action==='AGUARDAR_CLIENTE'&&!ev.linkFormCliente)btn.disabled=true;
+  if(action==='AGUARDAR_FORM_INTERNO'&&!(formInterno&&formInterno.url))btn.disabled=true;
+  if(action==='FINALIZADO'&&!ev.linkOsPdf&&!ev.linkOsDoc)btn.disabled=true;
+}
+
+function runPrimaryAction(){
+  if(!currentWorkspace)return;
+
+  const ev=currentWorkspace.evento||{};
+  const action=byId('primaryBtn').dataset.action||'';
+
+  if(action==='AGUARDAR_CLIENTE'&&ev.linkFormCliente){
+    window.open(ev.linkFormCliente,'_blank');
+    return;
+  }
+
+  if(action==='AGUARDAR_FORM_INTERNO'){
+    openInternalForm();
+    return;
+  }
+
+  if(action==='FINALIZADO'){
+    window.open(ev.linkOsPdf||ev.linkOsDoc,'_blank');
+    return;
+  }
+
+  if(action==='DIAGNOSTICO'){
+    switchTab('history');
+    return;
+  }
+
+  if(action==='GERAR_ESCOLHA_FORM'){
+    switchTab('review');
+  }
+
+  runOperation(action);
+}
+
+function renderOverview(ev){
+  const infos=[
+    ['Contratante',ev.contratante],
+    ['Local',ev.local],
+    ['Degustação',`${ev.dataDegustacao||'-'} ${ev.horarioDegustacao||''}`],
+    ['Pax degustação',ev.paxDegustacao],
+    ['Responsável',ev.respProducao],
+    ['Status',statusLabel(ev.status)],
+    ['Processado em',ev.processadoEm],
+    ['ID Evento',ev.idEvento],
+  ];
+
+  let alerts='';
+
+  if(ev.erro){
+    alerts+=`
+      <div class="alert error" style="margin-bottom:10px">
+        <b>Erro atual</b><br><br>${esc(ev.erro)}
+      </div>`;
+  }
+
+  if(ev.avisos){
+    alerts+=`
+      <div class="alert warning">
+        <b>Avisos / revisões</b><br><br>${esc(ev.avisos)}
+      </div>`;
+  }
+
+  byId('tab-overview').innerHTML=`
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <h3>Resumo do evento</h3>
+          <p>A ficha abre rapidamente. Informações pesadas são carregadas somente quando você entra em cada aba.</p>
+        </div>
+      </div>
+      <div class="info-grid">
+        ${infos.map(([k,v])=>`
+          <div class="info">
+            <strong>${esc(k)}</strong>
+            <div>${esc(v||'-')}</div>
+          </div>`).join('')}
+      </div>
+    </div>
+    ${alerts}`;
+}
+
+function renderReview(rev){
+  rev=rev||{
+    cabecalho:{},
+    menu:[],
+    terceiros:[],
+    aditivos:[],
+  };
+
+  const cab=rev.cabecalho||{};
+
+  const cabHtml=Object.keys(cab).length
+    ?Object.entries(cab).map(([k,v])=>`
+      <div class="header-field">
+        <label>${esc(humanize(k))}</label>
+        <input data-head-key="${attr(k)}" value="${attr(v)}" ${editingReview?'':'disabled'}>
+      </div>`).join('')
+    :'<div style="font-size:11px;color:#98a2b3">Ainda não há cabeçalho extraído.</div>';
+
+  const menuRows=(rev.menu||[]).map((m,i)=>`
+    <tr data-menu-index="${i}">
+      <td><input data-f="grupo" value="${attr(m.grupo)}" ${editingReview?'':'disabled'}></td>
+      <td><input data-f="categoria" value="${attr(m.categoria)}" ${editingReview?'':'disabled'}></td>
+      <td><input data-f="item" value="${attr(m.item)}" ${editingReview?'':'disabled'}></td>
+      <td><input data-f="qtdDegustacao" type="number" value="${attr(m.qtdDegustacao)}" ${editingReview?'':'disabled'}></td>
+      <td><input data-f="qtdMenuFinal" type="number" value="${attr(m.qtdMenuFinal)}" ${editingReview?'':'disabled'}></td>
+      <td>
+        <select data-f="tipo" ${editingReview?'':'disabled'}>
+          ${['SELECIONAVEL','INCLUSO_CARDAPIO','FIXO','SERVICO_CONTRATADO']
+            .map(t=>`<option ${m.tipo===t?'selected':''}>${t}</option>`).join('')}
+        </select>
+      </td>
+    </tr>`).join('');
+
+  const tercRows=(rev.terceiros||[]).map(t=>`
+    <tr>
+      <td>${esc(t.tipo)}</td>
+      <td>${esc(t.categoria)}</td>
+      <td>${esc(t.item)}</td>
+      <td>${t.incluirMenuFinal?'Sim':'Não'}</td>
+      <td>${t.incluirOs?'Sim':'Não'}</td>
+    </tr>`).join('');
+
+  const adRows=(rev.aditivos||[]).map(a=>`
+    <tr>
+      <td>${esc(a.ordem)}</td>
+      <td>${esc(a.data)}</td>
+      <td>${esc(a.arquivo)}</td>
+      <td>${esc(a.tipoAlteracao)}</td>
+      <td>${esc(a.efeitoMenu)}</td>
+      <td>${esc(a.resumo)}</td>
+      <td>${esc(a.valorAdicional)}</td>
+    </tr>`).join('');
+
+  byId('tab-review').innerHTML=`
+    ${rev.avisos?`
+      <div class="alert warning" style="margin-bottom:12px">
+        <b>Avisos para revisar</b><br><br>${esc(rev.avisos)}
+      </div>`:''}
+
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <h3>Cabeçalho extraído</h3>
+          <p>Contrato, evento, datas, valores e contatos extraídos pela IA.</p>
+        </div>
+        <div>
+          <button class="btn" onclick="toggleReviewEdit()">
+            ${editingReview?'Cancelar edição':'Editar extração'}
+          </button>
+          ${editingReview?'<button class="btn primary" onclick="saveReview()">Salvar correções</button>':''}
+        </div>
+      </div>
+      <div class="header-editor" id="headerEditor">${cabHtml}</div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <h3>Cardápio / Anexo II</h3>
+          <p>${(rev.menu||[]).length} linhas extraídas. Revise categorias, itens e quantidades.</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Grupo</th><th>Categoria</th><th>Item</th>
+              <th>Qtd. degustação</th><th>Qtd. final</th><th>Tipo</th>
+            </tr>
+          </thead>
+          <tbody id="menuReviewBody">
+            ${menuRows||'<tr><td colspan="6">Nenhum item extraído.</td></tr>'}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <h3>Fornecedores terceiros</h3>
+          <p>Itens registrados para Menu Final / OS, sem entrar na degustação.</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Tipo</th><th>Categoria</th><th>Item</th><th>Menu Final</th><th>OS</th></tr></thead>
+          <tbody>${tercRows||'<tr><td colspan="5">Nenhum terceiro registrado.</td></tr>'}</tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <h3>Aditivos consolidados</h3>
+          <p>Resultado contratual vigente. Para incluir um novo aditivo, use a aba Aditivos.</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>#</th><th>Data</th><th>Arquivo</th><th>Alteração</th><th>Efeito no menu</th><th>Resumo</th><th>Valor</th></tr></thead>
+          <tbody>${adRows||'<tr><td colspan="7">Nenhum aditivo registrado.</td></tr>'}</tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+function toggleReviewEdit(){
+  if(!lazyData.review){
+    ensureTabLoaded('review');
+    return;
+  }
+
+  editingReview=!editingReview;
+  renderReview(lazyData.review);
+}
+
+function saveReview(){
+  if(!selectedId||!lazyData.review)return;
+
+  const cab={};
+
+  document.querySelectorAll('[data-head-key]').forEach(
+    input=>cab[input.dataset.headKey]=input.value
+  );
+
+  const menu=[];
+
+  document.querySelectorAll('[data-menu-index]').forEach(row=>{
+    const obj={};
+
+    row.querySelectorAll('[data-f]').forEach(
+      el=>obj[el.dataset.f]=el.value
+    );
+
+    obj.qtdDegustacao=Number(obj.qtdDegustacao||0);
+    obj.qtdMenuFinal=Number(obj.qtdMenuFinal||0);
+    menu.push(obj);
+  });
+
+  startSimpleLoading('Salvando correções...');
+
+  google.script.run
+    .withSuccessHandler(result=>{
+      stopProcessing();
+      editingReview=false;
+      lazyData.review=result.revisao||lazyData.review;
+      renderReview(lazyData.review);
+
+      toast(
+        result.ok
+          ?'Correções salvas. Extração pronta para aprovação.'
+          :'Correções salvas, mas ainda há validações pendentes.',
+        !result.ok
+      );
+
+      refreshSelectedShell();
+    })
+    .withFailureHandler(handleError)
+    .apiSalvarRevisaoExtracaoAB(
+      selectedId,
+      {cabecalho:cab,menu}
+    );
+}
+
+function renderFiles(ev){
+  const docs=[
+    {type:'ESCOLHA',label:'Escolha de Menu',doc:ev.linkEscolhaDoc,pdf:ev.linkEscolhaPdf},
+    {type:'RELATORIO',label:'Relatório de Degustação',doc:ev.linkRelatorioDoc,pdf:ev.linkRelatorioPdf},
+    {type:'MENU_FINAL',label:'Menu Final',doc:ev.linkMenuFinalDoc,pdf:ev.linkMenuFinalPdf},
+    {type:'OS',label:'OS A&B',doc:ev.linkOsDoc,pdf:ev.linkOsPdf},
+  ].filter(x=>x.doc||x.pdf);
+
+  const rows=docs.map(x=>`
+    <div class="file-row">
+      <div>
+        <div class="name">${esc(x.label)}</div>
+        <div class="hint">Edite o DOC e use “Atualizar PDF” para sincronizar.</div>
+      </div>
+
+      <div class="link-grid">
+        ${x.doc?`<a class="link-pill" target="_blank" href="${attr(x.doc)}">Abrir DOC</a>`:''}
+        ${x.pdf?`<a class="link-pill" target="_blank" href="${attr(x.pdf)}">Abrir PDF</a>`:'<span style="font-size:10px;color:#98a2b3">PDF ainda não gerado</span>'}
+      </div>
+
+      <div class="file-actions">
+        ${x.doc?`
+          <button class="btn tiny pdf-update" onclick="updatePdf('${x.type}')">
+            ${x.pdf?'Atualizar PDF':'Gerar PDF'}
+          </button>`:''}
+      </div>
+    </div>`).join('');
+
+  const others=[
+    ['Contrato',ev.linkContrato],
+    ['Pasta do evento',ev.linkPastaEvento],
+    ['Form Cliente',ev.linkFormCliente],
+    ['Form Interno',ev.linkFormInterno],
+  ].filter(([,url])=>!!url);
+
+  byId('tab-files').innerHTML=`
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <h3>Documentos e PDFs</h3>
+          <p>O PDF pode ser atualizado a qualquer momento a partir do DOC corrigido.</p>
+        </div>
+      </div>
+      <div class="file-list">
+        ${rows||'<div style="font-size:11px;color:#98a2b3">Nenhum documento gerado ainda.</div>'}
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div><h3>Links operacionais</h3><p>Contrato, pasta e formulários.</p></div>
+      </div>
+      <div class="link-grid">
+        ${others.length
+          ?others.map(([l,u])=>`<a class="link-pill" target="_blank" href="${attr(u)}">${esc(l)}</a>`).join('')
+          :'<span style="font-size:11px;color:#98a2b3">Nenhum link disponível.</span>'}
+      </div>
+    </div>`;
+}
+
+function renderHistory(logs){
+  byId('tab-history').innerHTML=`
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <h3>Erros & histórico</h3>
+          <p>Esta aba é carregada sob demanda para deixar a navegação entre clientes mais rápida.</p>
+        </div>
+      </div>
+
+      ${logs.length
+        ?logs.map(l=>`
+          <div class="log-item ${
+            String(l.nivel).toUpperCase()==='ERRO'
+              ?'error'
+              :String(l.nivel).toUpperCase()==='AVISO'
+                ?'warn':''
+          }">
+            <div class="top">
+              <span>${esc(l.nivel)} • ${esc(l.etapa)}</span>
+              <span>${esc(l.data)}</span>
+            </div>
+            <div class="msg">${esc(l.mensagem)}</div>
+          </div>`).join('')
+        :'<div style="font-size:11px;color:#98a2b3">Nenhum histórico disponível.</div>'}
+    </div>`;
+}
+
+/* =========================================================
+ * ADITIVOS
+ * ========================================================= */
+
+function renderAdditives(data){
+  data=data||{
+    workflow:[],
+    aplicados:[],
+    linksAtuais:[],
+    estagioSugerido:'ANTES_DEGUSTACAO',
+  };
+
+  const workflow=Array.isArray(data.workflow)?data.workflow:[];
+
+  byId('tab-additives').innerHTML=`
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <h3>Novo aditivo</h3>
+          <p>Primeiro a IA analisa e compara com o contrato. Nada é alterado até você revisar e clicar em “Aplicar ao evento”.</p>
+        </div>
+      </div>
+
+      <div class="aditivo-entry">
+        <div class="field">
+          <label>Link do aditivo</label>
+          <input id="additiveLink" placeholder="Cole o link do PDF do aditivo no Google Drive">
+        </div>
+
+        <div class="field">
+          <label>Quando o aditivo chegou?</label>
+          <select id="additiveStage">
+            <option value="ANTES_DEGUSTACAO" ${data.estagioSugerido==='ANTES_DEGUSTACAO'?'selected':''}>Antes da degustação</option>
+            <option value="DEPOIS_DEGUSTACAO" ${data.estagioSugerido==='DEPOIS_DEGUSTACAO'?'selected':''}>Depois da degustação</option>
+            <option value="APOS_OS" ${data.estagioSugerido==='APOS_OS'?'selected':''}>Após OS</option>
+          </select>
+        </div>
+
+        <button class="btn primary" onclick="analyzeAdditive()">Analisar aditivo</button>
+      </div>
+
+      <div class="notice" style="margin-top:10px">
+        Segurança: a análise não modifica o contrato atual. A aplicação acontece somente em uma segunda confirmação.
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <h3>Histórico de aditivos</h3>
+          <p>${workflow.length} análise(s) registrada(s) para este evento.</p>
+        </div>
+      </div>
+
+      <div class="aditivo-list">
+        ${workflow.length
+          ?workflow.map(renderAdditiveCard).join('')
+          :'<div style="font-size:11px;color:#98a2b3">Nenhum aditivo analisado neste evento.</div>'}
+      </div>
+    </div>`;
+}
+
+function renderAdditiveCard(item){
+  const analysis=item.analise||{};
+  const impact=(item.impacto&&item.impacto.diff)||{};
+  const plan=(item.impacto&&item.impacto.plano)||{};
+  const status=String(item.status||'').toUpperCase();
+  const cardClass=
+    status==='APLICADO'?'aplicado':
+    status==='ANALISADO'?'analisado':
+    status.includes('ERRO')?'erro':
+    status==='REJEITADO'?'rejeitado':'';
+
+  const statusBadgeHtml=
+    status==='APLICADO'
+      ?'<span class="badge ok">APLICADO</span>'
+      :status==='ANALISADO'
+        ?'<span class="badge warn">ANALISADO — AGUARDANDO APLICAÇÃO</span>'
+        :status==='REJEITADO'
+          ?'<span class="badge bad">NÃO VINCULADO AO CONTRATO</span>'
+          :status.includes('ERRO')
+            ?'<span class="badge bad">ERRO</span>'
+            :`<span class="badge neutral">${esc(status)}</span>`;
+
+  const changes=(analysis.alteracoes||[]).map(a=>`
+    <div class="change-row">
+      <b>${esc(a.area)} • ${esc(a.acao)}</b><br>
+      ${a.antes?`Antes: ${esc(a.antes)}<br>`:''}
+      ${a.depois?`Depois: ${esc(a.depois)}<br>`:''}
+      ${a.impacto_fluxo?`Impacto: ${esc(a.impacto_fluxo)}`:''}
+    </div>`).join('');
+
+  const diffHtml=status==='APLICADO'
+    ?`
+      <div class="impact-summary">
+        <div class="impact-box"><b>${(impact.menuAdicionados||[]).length}</b><span>itens adicionados</span></div>
+        <div class="impact-box"><b>${(impact.menuRemovidos||[]).length}</b><span>itens removidos</span></div>
+        <div class="impact-box"><b>${(impact.menuAlterados||[]).length}</b><span>itens alterados</span></div>
+        <div class="impact-box"><b>${(impact.cabecalhoAlterado||[]).length}</b><span>campos alterados</span></div>
+      </div>
+      ${plan.mensagem?`<div class="alert warning"><b>Impacto no fluxo</b><br><br>${esc(plan.mensagem)}<br><br><b>Próximo passo:</b> ${esc(plan.proximoPasso||'')}</div>`:''}
+    `
+    :'';
+
+  const canApply=
+    ['ANALISADO','ERRO_APLICACAO'].includes(status)&&
+    analysis.pertence_ao_contrato!==false;
+
+  return`
+    <div class="aditivo-card ${cardClass}">
+      <div class="aditivo-head">
+        <div>
+          <div class="aditivo-title">${esc(item.arquivo||'Aditivo')}</div>
+          <div class="aditivo-meta">
+            ${esc(stageLabel(item.estagio))} • analisado ${esc(item.criadoEm||'')}
+            ${item.aplicadoEm?' • aplicado '+esc(item.aplicadoEm):''}
+          </div>
+        </div>
+        ${statusBadgeHtml}
+      </div>
+
+      ${analysis.resumo?`<div style="font-size:11px;line-height:1.5;margin-top:10px">${esc(analysis.resumo)}</div>`:''}
+
+      ${analysis.confianca?`
+        <div style="margin-top:8px">
+          <span class="badge ${analysis.confianca==='ALTA'?'ok':analysis.confianca==='MEDIA'?'warn':'bad'}">
+            Confiança ${esc(analysis.confianca)}
+          </span>
+          <span class="badge ${analysis.altera_menu||analysis.altera_operacao?'warn':'neutral'}">
+            ${analysis.altera_menu||analysis.altera_operacao?'Impacta A&B':'Sem alteração estrutural aparente'}
+          </span>
+        </div>`:''}
+
+      ${(analysis.inconsistencias||[]).length?`
+        <div class="alert warning" style="margin-top:9px">
+          <b>Pontos para conferir</b><br><br>
+          ${(analysis.inconsistencias||[]).map(x=>'• '+esc(x)).join('<br>')}
+        </div>`:''}
+
+      ${changes?`<div class="change-list">${changes}</div>`:''}
+      ${diffHtml}
+
+      ${item.erro?`<div class="alert error" style="margin-top:9px">${esc(item.erro)}</div>`:''}
+
+      ${renderPreviousArtifacts(item.artefatosAnteriores)}
+
+      <div class="aditivo-actions">
+        ${item.link?`<a class="btn tiny" target="_blank" href="${attr(item.link)}">Abrir PDF</a>`:''}
+        ${canApply?`
+          <button class="btn primary" onclick="applyAdditive('${jsq(item.idAditivo)}','${jsq(item.estagio)}','${jsq(analysis.confianca||'')}')">
+            Aplicar ao evento
+          </button>`:''}
+      </div>
+    </div>`;
+}
+
+
+function renderPreviousArtifacts(artifacts){
+  artifacts=artifacts||{};
+
+  const links=[
+    ['Escolha anterior',artifacts.escolhaDoc],
+    ['PDF Escolha anterior',artifacts.escolhaPdf],
+    ['Form Cliente anterior',artifacts.formCliente],
+    ['Relatório anterior',artifacts.relatorioDoc],
+    ['PDF Relatório anterior',artifacts.relatorioPdf],
+    ['Form Interno anterior',artifacts.formInterno],
+    ['Menu Final anterior',artifacts.menuFinalDoc],
+    ['PDF Menu Final anterior',artifacts.menuFinalPdf],
+    ['OS anterior',artifacts.osDoc],
+    ['PDF OS anterior',artifacts.osPdf],
+  ].filter(([,url])=>!!url);
+
+  if(!links.length)return'';
+
+  return`
+    <div style="margin-top:10px">
+      <div class="notice" style="font-weight:800;margin-bottom:6px">Versões anteriores preservadas para auditoria</div>
+      <div class="link-grid">
+        ${links.map(([label,url])=>`<a class="link-pill" target="_blank" href="${attr(url)}">${esc(label)}</a>`).join('')}
+      </div>
+    </div>`;
+}
+
+function analyzeAdditive(){
+  if(!selectedId)return;
+
+  const link=(byId('additiveLink')&&byId('additiveLink').value||'').trim();
+  const stage=(byId('additiveStage')&&byId('additiveStage').value)||'';
+
+  if(!link){
+    toast('Cole o link do PDF do aditivo.',true);
+    return;
+  }
+
+  const token='add_an_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+
+  startProcessing(
+    'ANALISAR_ADITIVO',
+    token,
+    'Analisando aditivo'
+  );
+
+  google.script.run
+    .withSuccessHandler(result=>{
+      stopProcessing();
+
+      toast(
+        result.ok
+          ?'Aditivo analisado. Revise as alterações antes de aplicar.'
+          :'A IA não confirmou vínculo com este contrato.',
+        !result.ok
+      );
+
+      lazyData.additives=null;
+      ensureTabLoaded('additives',true);
+    })
+    .withFailureHandler(handleError)
+    .apiAnalisarAditivoAB(
+      selectedId,
+      link,
+      stage,
+      token
+    );
+}
+
+function applyAdditive(idAditivo,stage,confidence){
+  if(!selectedId)return;
+
+  const warning=
+    confidence==='BAIXA'
+      ?'\n\nATENÇÃO: a confiança da análise foi BAIXA.'
+      :confidence==='MEDIA'
+        ?'\n\nA análise indicou confiança MÉDIA. Confira os pontos de atenção.'
+        :'';
+
+  const msg=
+    `Aplicar este aditivo ao evento?\n\n`+
+    `Momento: ${stageLabel(stage)}.`+
+    warning+
+    `\n\nO sistema irá consolidar contrato + todos os aditivos e atualizar o fluxo correspondente.`;
+
+  if(!confirm(msg))return;
+
+  const token='add_apply_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+
+  startProcessing(
+    'APLICAR_ADITIVO',
+    token,
+    'Aplicando aditivo ao contrato'
+  );
+
+  google.script.run
+    .withSuccessHandler(result=>{
+      stopProcessing();
+
+      toast(
+        result&&result.plano&&result.plano.proximoPasso
+          ?result.plano.proximoPasso
+          :'Aditivo aplicado.'
+      );
+
+      lazyData={
+        review:null,
+        history:null,
+        additives:null,
+      };
+
+      refreshAll(false);
+
+      setTimeout(()=>{
+        if(selectedId){
+          refreshSelectedShell(()=>{
+            switchTab('additives');
+            ensureTabLoaded('additives',true);
+          });
+        }
+      },600);
+    })
+    .withFailureHandler(handleError)
+    .apiAplicarAditivoAB(
+      selectedId,
+      idAditivo,
+      token
+    );
+}
+
+function stageLabel(stage){
+  return{
+    ANTES_DEGUSTACAO:'Antes da degustação',
+    DEPOIS_DEGUSTACAO:'Depois da degustação',
+    APOS_OS:'Após OS',
+  }[String(stage||'').toUpperCase()]||stage||'';
+}
+
+/* =========================================================
+ * NOVO EVENTO / OPERAÇÕES
+ * ========================================================= */
+
+function openNew(){
+  clearNew();
+  byId('newModal').classList.add('show');
+}
+
+function closeNew(){
+  byId('newModal').classList.remove('show');
+}
+
+function clearNew(){
+  [
+    'fContrato','fPasta','fResp',
+    'fData','fHorario','fLocal','fPax'
+  ].forEach(id=>byId(id).value='');
+
+  byId('fExtract').checked=true;
+}
+
+function createEvent(){
+  const payload={
+    linkContrato:byId('fContrato').value.trim(),
+    linkPastaEvento:byId('fPasta').value.trim(),
+    respProducao:byId('fResp').value.trim(),
+    dataDegustacao:byId('fData').value,
+    horarioDegustacao:byId('fHorario').value.trim(),
+    localDegustacao:byId('fLocal').value.trim(),
+    paxDegustacao:byId('fPax').value,
+  };
+
+  const extract=byId('fExtract').checked;
+
+  startSimpleLoading('Criando evento...');
+
+  google.script.run
+    .withSuccessHandler(result=>{
+      closeNew();
+      selectedId=result.idEvento;
+      stopProcessing();
+
+      if(extract){
+        runOperation('EXTRACAO',result.idEvento);
+      }else{
+        toast('Evento criado.');
+        refreshAll(false);
+        setTimeout(()=>selectEvent(result.idEvento,false),350);
+      }
+    })
+    .withFailureHandler(handleError)
+    .apiCriarEventoAB(payload);
+}
+
+function runOperation(action,idOverride){
+  const id=idOverride||selectedId;
+
+  if(
+    !id||
+    !action||
+    [
+      'AGUARDAR_CLIENTE',
+      'AGUARDAR_FORM_INTERNO',
+      'POS_DEGUSTACAO',
+      'FINALIZADO',
+      'DIAGNOSTICO',
+    ].includes(action)
+  ){
+    return;
+  }
+
+  const token=
+    'op_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+
+  startProcessing(action,token);
+
+  google.script.run
+    .withSuccessHandler(result=>{
+      stopProcessing();
+
+      toast(
+        result&&result.resultado&&result.resultado.mensagem
+          ?result.resultado.mensagem
+          :'Processo concluído.'
+      );
+
+      lazyData={
+        review:null,
+        history:null,
+        additives:lazyData.additives,
+      };
+
+      refreshAll(false);
+
+      setTimeout(()=>{
+        selectEvent(id,false);
+
+        if(action==='EXTRACAO'){
+          setTimeout(()=>switchTab('review'),300);
+        }
+      },450);
+    })
+    .withFailureHandler(err=>{
+      stopProcessing();
+      toast(errMsg(err),true);
+      lazyData.history=null;
+      refreshAll(false);
+      setTimeout(()=>selectEvent(id,false),450);
+    })
+    .apiExecutarAcaoAB(id,action,token);
+}
+
+function openInternalForm(){
+  const fi=currentWorkspace&&currentWorkspace.formInterno;
+  const url=
+    (fi&&fi.url)||
+    (currentWorkspace&&currentWorkspace.evento&&currentWorkspace.evento.linkFormInterno);
+
+  if(!url){
+    toast('Form Interno ainda não está disponível.',true);
+    return;
+  }
+
+  window.open(url,'_blank');
+}
+
+function recreateInternalForm(){
+  if(!selectedId)return;
+
+  const fi=currentWorkspace&&currentWorkspace.formInterno;
+
+  if(fi&&fi.respondido){
+    toast(
+      'Este Form Interno já possui resposta. Não vou recriá-lo por este botão para evitar perda de informação. Use o fluxo de Aditivo quando for uma revisão contratual.',
+      true
+    );
+    return;
+  }
+
+  if(!confirm(
+    'Recriar o Form Interno deste evento?\n\n'+
+    'O formulário anterior será arquivado após a criação do novo.'
+  )){
+    return;
+  }
+
+  runOperation('RECRIAR_FORM_INTERNO');
+}
+
+function updatePdf(tipo){
+  if(!selectedId)return;
+
+  const token=
+    'pdf_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+
+  startProcessing(
+    'ATUALIZAR_PDF',
+    token,
+    'Atualizando PDF'
+  );
+
+  google.script.run
+    .withSuccessHandler(result=>{
+      stopProcessing();
+
+      toast(
+        result.preservouLink
+          ?'PDF atualizado. O mesmo link foi preservado.'
+          :'PDF atualizado. O link no painel foi sincronizado.'
+      );
+
+      refreshSelectedShell();
+    })
+    .withFailureHandler(handleError)
+    .apiAtualizarPdfDocumentoAB(
+      selectedId,
+      tipo,
+      token
+    );
+}
+
+/* =========================================================
+ * PROCESSAMENTO / TEMPO
+ * ========================================================= */
+
+function startSimpleLoading(title){
+  startProcessing(null,null,title);
+}
+
+function startProcessing(action,token,customTitle){
+  operationStart=Date.now();
+
+  byId('processing').classList.add('show');
+  byId('processingTitle').textContent=
+    customTitle||actionTitle(action);
+
+  byId('processingStage').textContent='Iniciando';
+  byId('processingDetail').textContent=
+    'O sistema está trabalhando. Você pode acompanhar o tempo abaixo.';
+
+  byId('progressBar').style.width='3%';
+
+  const est=
+    action&&state.estimativas&&state.estimativas[action];
+
+  byId('etaTime').textContent=
+    est
+      ?`Estimativa usual: ${formatDuration(est.minimo)}–${formatDuration(est.maximo)}`
+      :'Estimativa: —';
+
+  clearInterval(timerInterval);
+  clearInterval(progressInterval);
+
+  timerInterval=setInterval(()=>{
+    const sec=
+      Math.floor(
+        (Date.now()-operationStart)/1000
+      );
+
+    byId('elapsedTime').textContent=
+      `Tempo decorrido: ${formatDuration(sec)}`;
+  },1000);
+
+  if(token){
+    progressInterval=setInterval(()=>{
+      google.script.run
+        .withSuccessHandler(p=>{
+          if(!p)return;
+
+          byId('processingStage').textContent=
+            p.etapa||'Processando';
+
+          byId('processingDetail').textContent=
+            p.detalhe||'';
+
+          byId('progressBar').style.width=
+            Math.max(3,Number(p.percentual||0))+'%';
+        })
+        .apiObterProgressoAB(token);
+    },1500);
+  }
+}
+
+function stopProcessing(){
+  clearInterval(timerInterval);
+  clearInterval(progressInterval);
+  byId('processing').classList.remove('show');
+}
+
+function actionTitle(a){
+  return{
+    EXTRACAO:'Extraindo contrato',
+    GERAR_ESCOLHA_FORM:'Gerando Escolha + Formulário',
+    GERAR_FINAL_OS:'Gerando Menu Final + OS',
+    RECRIAR_FORM_INTERNO:'Recriando Formulário Interno',
+    REPROCESSAR_CLIENTE:'Reprocessando resposta do cliente',
+    ATUALIZAR_PDF:'Atualizando PDF',
+    ANALISAR_ADITIVO:'Analisando aditivo',
+    APLICAR_ADITIVO:'Aplicando aditivo',
+  }[a]||'Processando';
+}
+
+/* =========================================================
+ * AUTO-SYNC LEVE
+ * ========================================================= */
+
+function startAutoSync(){
+  clearInterval(autoSyncInterval);
+
+  autoSyncInterval=setInterval(
+    autoSync,
+    10000
+  );
+}
+
+function autoSync(){
+  if(
+    byId('processing').classList.contains('show')||
+    editingReview||
+    byId('newModal').classList.contains('show')
+  ){
+    return;
+  }
+
+  autoSyncTick++;
+
+  if(selectedId){
+    const id=selectedId;
+
+    google.script.run
+      .withSuccessHandler(light=>{
+        if(
+          !selectedId||
+          selectedId!==id||
+          !light||
+          !light.evento
+        ){
+          return;
+        }
+
+        const before=
+          workspaceSignature(currentWorkspace);
+
+        const after=
+          workspaceSignature(light);
+
+        if(before!==after){
+          currentWorkspace=light;
+          renderWorkspace(light);
+          lazyData.history=null;
+          markSynced();
+          toast('Evento atualizado automaticamente.');
+        }else{
+          markSynced();
+        }
+      })
+      .withFailureHandler(()=>
+        setSyncState(false,'Falha na sincronização')
+      )
+      .apiObterEstadoLeveEventoAB(id);
+  }
+
+  /*
+   * A lista lateral é atualizada só a cada 30 segundos.
+   * Isso reduz chamadas e deixa a troca entre clientes mais fluida.
+   */
+  if(autoSyncTick%3===0){
+    loadEvents();
+  }
+}
+
+function workspaceSignature(ws){
+  if(!ws)return'';
+
+  const ev=ws.evento||{};
+  const fi=ws.formInterno||{};
+
+  return JSON.stringify([
+    ev.status,
+    ev.linkFormInterno,
+    ev.linkRelatorioDoc,
+    ev.linkMenuFinalDoc,
+    ev.linkOsDoc,
+    ev.erro,
+    ev.avisos,
+    fi.respondido,
+    fi.respostas,
+    fi.ultimaRespostaEm,
+  ]);
+}
+
+function closeSelectedEvent(){
+  selectedId='';
+  currentWorkspace=null;
+  editingReview=false;
+  activeTab='overview';
+  lazyData={review:null,history:null,additives:null};
+  lazyLoading={review:false,history:false,additives:false};
+
+  byId('workspace').classList.add('hidden');
+  byId('emptyState').classList.remove('hidden');
+
+  renderEvents();
+}
+
+function setSyncState(busy,text){
+  byId('syncDot').classList.toggle('busy',!!busy);
+  byId('syncText').textContent=text||'Sincronizando';
+}
+
+function markSynced(){
+  lastSyncAt=Date.now();
+  setSyncState(false,'Atualizado agora');
+
+  setTimeout(()=>{
+    if(Date.now()-lastSyncAt>=55000){
+      setSyncState(false,'Atualizado há 1 min');
+    }
+  },60000);
+}
+
+/* =========================================================
+ * HELPERS
+ * ========================================================= */
+
+function statusLabel(s){
+  return{
+    NOVO:'Novo',
+    PROCESSANDO_CONTRATO:'Processando contrato',
+    AGUARDANDO_REVISAO:'Aguardando revisão',
+    AGUARDANDO_CLIENTE:'Aguardando cliente',
+    RELATORIO_GERADO:'Relatório gerado',
+    AGUARDANDO_POS_DEGUSTACAO:'Pós-degustação',
+    MENU_FINAL_E_OS_GERADOS:'Finalizado',
+    ERRO:'Erro',
+    ARQUIVADO:'Arquivado',
+  }[String(s||'').toUpperCase()]||(s||'Sem status');
+}
+
+function statusBadge(s){
+  const k=String(s||'')
+    .toLowerCase()
+    .replaceAll(' ','_');
+
+  return`
+    <span class="status s-${attr(k)}">
+      ${esc(statusLabel(s))}
+    </span>`;
+}
+
+function humanize(s){
+  return String(s||'')
+    .replaceAll('_',' ')
+    .replace(/\b\w/g,c=>c.toUpperCase());
+}
+
+function formatDuration(sec){
+  sec=Math.max(0,Number(sec||0));
+
+  if(sec<60)return`${sec}s`;
+
+  const m=Math.floor(sec/60);
+  const s=sec%60;
+
+  return s?`${m}m ${s}s`:`${m}m`;
+}
+
+function byId(id){
+  return document.getElementById(id);
+}
+
+function toast(msg,error=false){
+  const el=byId('toast');
+
+  el.textContent=msg;
+  el.style.background=
+    error?'#991b1b':'#101828';
+
+  el.style.display='block';
+
+  clearTimeout(window.__t);
+
+  window.__t=setTimeout(
+    ()=>el.style.display='none',
+    5000
+  );
+}
+
+function handleError(e){
+  stopProcessing();
+  setSyncState(false,'Erro de atualização');
+  toast(errMsg(e),true);
+}
+
+function errMsg(e){
+  return typeof e==='string'
+    ?e
+    :(e&&e.message)||'Ocorreu um erro.';
+}
+
+function debounce(fn,wait){
+  let t;
+
+  return(...a)=>{
+    clearTimeout(t);
+    t=setTimeout(()=>fn(...a),wait);
+  };
+}
+
+function esc(v){
+  return String(v??'')
+    .replaceAll('&','&amp;')
+    .replaceAll('<','&lt;')
+    .replaceAll('>','&gt;')
+    .replaceAll('"','&quot;')
+    .replaceAll("'","&#039;");
+}
+
+function attr(v){
+  return esc(v);
+}
+
+function jsq(v){
+  return String(v??'')
+    .replaceAll('\\','\\\\')
+    .replaceAll("'","\\'")
+    .replaceAll('\n',' ');
+}
+</script>
+
+</body>
+</html>
