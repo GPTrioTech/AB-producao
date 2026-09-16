@@ -3,6 +3,8 @@
 ![A&B Produção — Grupo TRIO](docs/ab-producao.svg)
 
 # A&B Produção
+
+[![Validar repositório](https://github.com/GPTrioTech/AB-producao/actions/workflows/validate.yml/badge.svg)](https://github.com/GPTrioTech/AB-producao/actions/workflows/validate.yml)
 **Do contrato à operação, com revisão humana em cada decisão.**
 
 Sistema do Grupo TRIO para organizar o fluxo de Alimentos & Bebidas dos eventos: contratos, degustação, escolhas do cliente, Menu Final e Ordem de Serviço.
@@ -79,6 +81,8 @@ flowchart TB
 [Arquitetura detalhada](meu-software/docs/ARQUITETURA.md) · [Integrações](meu-software/docs/INTEGRACOES.md) · [Estrutura de dados](meu-software/docs/BANCO_DADOS.md)
 
 ## Estado do projeto
+
+[Configuração do repositório](docs/CONFIGURACAO_REPOSITORIO.md) · [Suporte](SUPPORT.md) · [Relato de vulnerabilidades](SECURITY.md)
 
 Este repositório contém um **snapshot de código e documentação de transição**. A versão efetivamente implantada na conta Google ainda precisa ser conferida.
 

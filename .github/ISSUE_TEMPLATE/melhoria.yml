@@ -1,0 +1,36 @@
+name: Sugerir uma melhoria
+description: Proponha uma melhoria com contexto e critério de aceite.
+title: "[Melhoria] "
+body:
+  - type: textarea
+    id: necessidade
+    attributes:
+      label: Qual problema queremos resolver?
+      description: Explique quem é afetado e em qual situação.
+    validations:
+      required: true
+  - type: textarea
+    id: proposta
+    attributes:
+      label: Resultado desejado
+    validations:
+      required: true
+  - type: textarea
+    id: aceite
+    attributes:
+      label: Como saberemos que está pronto?
+      description: Descreva comportamentos que podem ser verificados.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área principal
+      options:
+        - Operação e regras de negócio
+        - Interface
+        - Integrações
+        - Desempenho e confiabilidade
+        - Documentação
+    validations:
+      required: true

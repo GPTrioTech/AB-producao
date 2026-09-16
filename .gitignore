@@ -1,0 +1,14 @@
+# Configuração local e credenciais
+.env
+.env.*
+!.env.example
+.clasp.json
+.clasprc.json
+credentials*.json
+service-account*.json
+# Dependências e saídas locais
+node_modules/
+coverage/
+tmp/
+.DS_Store
+Thumbs.db

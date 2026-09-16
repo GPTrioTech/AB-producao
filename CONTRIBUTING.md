@@ -38,6 +38,8 @@ Não inclua contratos, dados de clientes, chaves ou valores de Script Properties
 
 ## Verificação de documentação
 
+Execute `node tools/validate.cjs` para conferir sintaxe, compatibilidade das versões do front e destinos locais de links. O mesmo comando roda no GitHub Actions. Consulte [Configuração do repositório](docs/CONFIGURACAO_REPOSITORIO.md) para o escopo e as limitações dessa verificação.
+
 Confira caminhos relativos, títulos, diagramas, nomes das funções citadas e coerência com o código. Diferencie claramente **implementado no snapshot**, **validado no ambiente real** e **proposto**.
 
 ## Publicação

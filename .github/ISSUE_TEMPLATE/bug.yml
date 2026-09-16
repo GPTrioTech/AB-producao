@@ -1,0 +1,53 @@
+name: Relatar um erro
+description: Registre uma falha com passos e resultado esperado.
+title: "[Erro] "
+body:
+  - type: markdown
+    attributes:
+      value: "Use dados fictícios. Não publique contratos, chaves, respostas de clientes ou links privados."
+  - type: textarea
+    id: problema
+    attributes:
+      label: O que aconteceu?
+      description: Descreva o problema e o impacto na operação.
+    validations:
+      required: true
+  - type: dropdown
+    id: etapa
+    attributes:
+      label: Etapa do fluxo
+      options:
+        - Criação do evento
+        - Extração e revisão
+        - Form Cliente
+        - Pós-degustação
+        - Menu Final e OS
+        - Aditivos
+        - Navegação e sincronização
+        - Documentação
+        - Outra
+    validations:
+      required: true
+  - type: textarea
+    id: reproducao
+    attributes:
+      label: Como reproduzir
+      placeholder: "1. Abra um evento de teste\n2. Execute a ação\n3. Observe o resultado"
+    validations:
+      required: true
+  - type: textarea
+    id: esperado
+    attributes:
+      label: Resultado esperado
+    validations:
+      required: true
+  - type: input
+    id: versao
+    attributes:
+      label: Versão exibida e ambiente
+      placeholder: "Exemplo: V23.2, ambiente de teste"
+  - type: textarea
+    id: evidencias
+    attributes:
+      label: Evidências sem dados sensíveis
+      description: Mensagem de erro e captura anonimizada, quando disponíveis.

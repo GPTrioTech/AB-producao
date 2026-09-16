@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Guias do projeto
+    url: https://github.com/GPTrioTech/AB-producao/blob/main/meu-software/docs/README.md
+    about: Consulte operação, configuração e limitações conhecidas.
+  - name: Relato reservado
+    url: mailto:tech@grupotrio.com.br
+    about: Para assuntos que não devem aparecer em uma issue pública.

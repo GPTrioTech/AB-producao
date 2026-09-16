@@ -1,0 +1,23 @@
+name: Validar repositório
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: validar-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  validate:
+    name: Sintaxe e documentação
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Obter código
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Conferir sintaxe, versões e links locais
+        run: node tools/validate.cjs
