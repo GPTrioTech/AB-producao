@@ -1,131 +1,145 @@
 <div align="center">
 
-![A&B Produção — Grupo TRIO](docs/ab-producao.svg)
+![A&B Produção — Do contrato à operação](docs/ab-producao.svg)
 
-# A&B Produção
+**Gestão de Alimentos & Bebidas · Grupo TRIO**
+
+Contratos, degustação e documentos operacionais em um fluxo acompanhado pela Produção.
 
 [![Validar repositório](https://github.com/GPTrioTech/AB-producao/actions/workflows/validate.yml/badge.svg)](https://github.com/GPTrioTech/AB-producao/actions/workflows/validate.yml)
-**Do contrato à operação, com revisão humana em cada decisão.**
 
-Sistema do Grupo TRIO para organizar o fluxo de Alimentos & Bebidas dos eventos: contratos, degustação, escolhas do cliente, Menu Final e Ordem de Serviço.
-
-[Conheça o fluxo](meu-software/docs/GUIA_OPERACAO.md) · [Documentação](meu-software/docs/README.md) · [Implantação](meu-software/docs/GUIA_IMPLANTACAO.md) · [Pendências](meu-software/docs/PENDENCIAS.md)
+[**Guia de operação**](meu-software/docs/GUIA_OPERACAO.md) &nbsp; · &nbsp; [**Documentação**](meu-software/docs/README.md) &nbsp; · &nbsp; [**Implantação**](meu-software/docs/GUIA_IMPLANTACAO.md) &nbsp; · &nbsp; [**Suporte**](SUPPORT.md)
 
 </div>
 
 ---
 
-## O que o projeto faz
+## Uma operação, do início ao fim
 
-O A&B Produção transforma informações contratuais em um fluxo estruturado de trabalho. A Produção revisa os dados extraídos, acompanha as escolhas do cliente e aprova a geração dos documentos finais.
+O **A&B Produção** organiza as informações do contrato, acompanha as escolhas do cliente e prepara os documentos usados na execução do evento. A equipe confere os dados e conduz cada avanço do processo.
 
-| Etapa | Entrega |
-|---|---|
-| Contrato e aditivos | Dados do evento e cardápio vigente extraídos com apoio de IA |
-| Revisão da Produção | Cabeçalho e menu conferidos antes de seguir |
-| Escolhas do cliente | Escolha de Menu em DOC/PDF e formulário de degustação |
-| Pós-degustação | Relatório e formulário interno com definições operacionais |
-| Aprovação final | Menu Final e OS A&B em DOC/PDF |
-| Alterações posteriores | Análise de aditivos e reabertura das etapas afetadas |
+<table>
+<tr>
+<td width="33%" valign="top">
 
-## Como funciona
+### 01 · Organizar
+Contrato e aditivos consolidados, com extração assistida por IA e revisão do cabeçalho e do cardápio.
+
+</td>
+<td width="33%" valign="top">
+
+### 02 · Acompanhar
+Escolhas do cliente, relatório de degustação e definições internas reunidos no fluxo do evento.
+
+</td>
+<td width="33%" valign="top">
+
+### 03 · Entregar
+Menu Final e Ordem de Serviço em DOC/PDF, gerados após a aprovação explícita da Produção.
+
+</td>
+</tr>
+</table>
+
+## O caminho de cada evento
 
 ```mermaid
 flowchart LR
-    A["Contrato + aditivos"] --> B["Extração com IA"]
-    B --> C["Revisão humana"]
-    C --> D["Escolha + Form Cliente"]
-    D --> E["Relatório + Form Interno"]
-    E --> F["Aprovação da Produção"]
-    F --> G["Menu Final + OS A&B"]
+    A["01 · Contrato<br/>Extração + aditivos"] --> B["02 · Revisão<br/>Conferência da Produção"]
+    B --> C["03 · Cliente<br/>Escolhas de degustação"]
+    C --> D["04 · Pós-degustação<br/>Definições internas"]
+    D --> E["05 · Aprovação<br/>Menu Final + OS"]
+    classDef etapa fill:#F9F8F4,stroke:#BFB8AF,color:#231D1A;
+    classDef final fill:#510303,stroke:#510303,color:#FFFFFF;
+    class A,B,C,D etapa;
+    class E final;
 ```
 
-**A geração final depende de uma ação explícita da Produção.** Responder o Form Interno registra as escolhas, mas não emite automaticamente o Menu Final e a OS.
+> **A decisão final é da Produção.** A resposta ao Form Interno registra as escolhas; o Menu Final e a OS são emitidos somente após o comando explícito de geração.
 
-## Para quem
+## Acesso rápido
 
-| Público | Papel |
-|---|---|
-| Produção | Opera o Web App, revisa informações e aprova a geração |
-| Cliente | Informa escolhas de menu e observações no formulário |
-| Cozinha, Salão, Maitria e Compras A&B | Consultam as informações consolidadas para a operação |
-| Comercial | Fornece contrato e informações da passagem de bastão |
-| TRIO Tech | Mantém o código, as integrações e a documentação |
+| Para quem opera | Para quem mantém |
+| :--- | :--- |
+| [**Guia de operação**](meu-software/docs/GUIA_OPERACAO.md)<br>Rotina e etapas do evento | [**Implantação e validação**](meu-software/docs/GUIA_IMPLANTACAO.md)<br>Preparação e atualização do ambiente |
+| [**Regras de negócio**](meu-software/docs/REGRAS_NEGOCIO.md)<br>Critérios de menu, degustação e aditivos | [**Arquitetura e integrações**](meu-software/docs/ARQUITETURA.md)<br>Componentes e comunicação entre serviços |
+| [**Suporte**](SUPPORT.md)<br>Como relatar erros e solicitar melhorias | [**Como contribuir**](CONTRIBUTING.md)<br>Orientações para mudanças no projeto |
 
-## Comece por aqui
+[Ver toda a documentação →](meu-software/docs/README.md)
 
-| Sua tarefa | Referência |
-|---|---|
-| Entender o uso no dia a dia | [Guia de operação](meu-software/docs/GUIA_OPERACAO.md) |
-| Encontrar um documento técnico | [Índice da documentação](meu-software/docs/README.md) |
-| Preparar ou atualizar o ambiente | [Guia de implantação e validação](meu-software/docs/GUIA_IMPLANTACAO.md) |
-| Alterar o código | [Como contribuir](CONTRIBUTING.md) e [instruções de desenvolvimento](meu-software/AGENTS.md) |
-| Investigar um problema | [Bugs e limitações](meu-software/docs/BUGS_E_LIMITACOES.md) |
-| Priorizar melhorias | [Pendências e critérios de aceite](meu-software/docs/PENDENCIAS.md) |
+## Entregas do sistema
 
-## Arquitetura
+| Momento | Documento | Uso |
+| :--- | :--- | :--- |
+| Antes da degustação | **Escolha de Menu** + Form Cliente | Coletar escolhas e observações |
+| Após a resposta do cliente | **Relatório de Degustação** + Form Interno | Preparar a conferência operacional |
+| Após a aprovação da Produção | **Menu Final** | Apresentar o cardápio ao cliente |
+| Após a aprovação da Produção | **OS A&B** | Orientar Cozinha, Salão, Maitria e Compras A&B |
 
-A interface é servida por **Google Apps Script**. O **Google Sheets** mantém o estado operacional; **Drive, Docs e Forms** armazenam arquivos, geram documentos e coletam respostas. A **OpenAI Responses API** auxilia a extração e a consolidação contratual.
+Os quatro documentos são gerados em **DOC e PDF**. Aditivos passam por análise antes da aplicação e podem reabrir as etapas afetadas, preservando referências dos artefatos anteriores.
 
-```mermaid
-flowchart TB
-    UI["Web App"] --> API["Apps Script"]
-    API <--> DB[("Google Sheets")]
-    API --> IA["Extração com IA"]
-    API --> DOC["Drive + Docs"]
-    API --> FORM["Google Forms"]
-    FORM --> CENTRAL["Central de respostas"]
-    CENTRAL --> API
-```
+## Tecnologia a serviço da operação
 
-[Arquitetura detalhada](meu-software/docs/ARQUITETURA.md) · [Integrações](meu-software/docs/INTEGRACOES.md) · [Estrutura de dados](meu-software/docs/BANCO_DADOS.md)
+**Apps Script** serve a interface e executa as automações. **Google Sheets** mantém os registros; **Drive e Docs** organizam os arquivos e documentos; **Forms** coleta as respostas. A **OpenAI Responses API** auxilia a leitura e consolidação contratual.
 
-## Estado do projeto
+[Arquitetura](meu-software/docs/ARQUITETURA.md) · [Integrações](meu-software/docs/INTEGRACOES.md) · [Estrutura de dados](meu-software/docs/BANCO_DADOS.md)
 
-[Configuração do repositório](docs/CONFIGURACAO_REPOSITORIO.md) · [Suporte](SUPPORT.md) · [Relato de vulnerabilidades](SECURITY.md)
-
-Este repositório contém um **snapshot de código e documentação de transição**. A versão efetivamente implantada na conta Google ainda precisa ser conferida.
-
-| Componente | Baseline documentada |
-|---|---|
-| Motor de negócio | Backend V23.1 |
-| Controller do Web App | V23.2 |
-| Interface HTML | V23.2 |
-| Utilitário de reset de testes | Anterior à V23.2 |
-
-Essa combinação de versões é intencional. Não representa erro de versionamento. Os próximos marcos são comparar o snapshot com o ambiente ativo, validar o fluxo completo com evento controlado e tratar os riscos priorizados de aditivos e concorrência.
-
-**Esta revisão melhora a documentação; não altera o aplicativo nem sua implantação.**
-
-## Estrutura
+<details>
+<summary><strong>Explorar a estrutura do repositório</strong></summary>
 
 ```text
 AB-producao/
-├── README.md                 # Apresentação do projeto
-├── CONTRIBUTING.md           # Orientação para alterações
-├── docs/                     # Recursos visuais da apresentação
+├── .github/                  Validação e modelos de colaboração
+├── docs/                     Apresentação e configuração do repositório
+├── tools/                    Verificação local
 └── meu-software/
-    ├── AGENTS.md             # Regras de desenvolvimento
-    ├── README.md             # Referência técnica e configuração
-    ├── SOURCE_SNAPSHOT.md    # Procedência do código
-    ├── backend/              # Regras de negócio e integrações
-    ├── frontend/             # Controller e interface do Web App
-    ├── scripts/              # Utilitário administrativo de testes
-    ├── database/             # Referência da persistência em Sheets
-    └── docs/                 # Guias, arquitetura, fluxos e pendências
+    ├── AGENTS.md             Regras de desenvolvimento
+    ├── SOURCE_SNAPSHOT.md    Procedência do código
+    ├── backend/              Regras de negócio e integrações
+    ├── frontend/             Controller e interface do Web App
+    ├── scripts/              Utilitário administrativo de testes
+    ├── database/             Referência da persistência em Sheets
+    └── docs/                 Guias, fluxos e pendências
 ```
 
-## Princípios do fluxo
+Leia as [instruções de desenvolvimento](meu-software/AGENTS.md) antes de alterar o código.
+
+</details>
+
+<details>
+<summary><strong>Consultar os princípios do fluxo</strong></summary>
 
 - Revisão humana antes de enviar escolhas e emitir documentos finais.
-- Operação por `ID_EVENTO`, sem depender da linha selecionada na planilha.
-- Bar de Drinks fora do escopo; bebidas do Anexo II seguem as regras próprias.
-- Aditivos analisados antes da aplicação e tratados conforme a etapa do evento.
+- Operação por `ID_EVENTO`, sem depender da linha ativa da planilha.
+- Bar de Drinks fora do escopo; bebidas do Anexo II seguem regras próprias.
+- Aditivos analisados antes da aplicação, conforme a etapa do evento.
 - Menu Final voltado ao cliente; detalhes operacionais concentrados na OS.
+- Comercial fornece contrato e passagem de bastão; TRIO Tech mantém código e integrações.
 
-Consulte as [regras de negócio](meu-software/docs/REGRAS_NEGOCIO.md) antes de alterar esses comportamentos.
+</details>
+
+## Estado e próximos passos
+
+> **Baseline documentada · implantação a conferir**<br>
+> Este repositório reúne um snapshot de código e documentação de transição. A versão ativa na conta Google ainda precisa ser comparada com este material.
+
+| Componente | Versão de referência |
+| :--- | :--- |
+| Backend | **V23.1** |
+| Controller e interface | **V23.2** |
+| Utilitário de reset de testes | Anterior à V23.2 |
+
+A combinação de versões é intencional. Os próximos passos são conferir o ambiente ativo, executar o fluxo completo com evento controlado e tratar os riscos priorizados de aditivos e concorrência.
+
+[**Pendências**](meu-software/docs/PENDENCIAS.md) · [**Bugs e limitações**](meu-software/docs/BUGS_E_LIMITACOES.md) · [**Configuração do repositório**](docs/CONFIGURACAO_REPOSITORIO.md)
 
 ---
 
-**TRIO Tech · Grupo TRIO**  
-[Tecnologia](https://github.com/GPTrioTech) · [Site institucional](https://www.grupotrio.com.br/)
+<div align="center">
+
+**TRIO Tech · Grupo TRIO**<br>
+Tecnologia para apoiar quem organiza e realiza cada encontro.
+
+[Grupo TRIO](https://www.grupotrio.com.br/) · [Time de tecnologia](https://github.com/GPTrioTech) · [Contribuição](CONTRIBUTING.md) · [Segurança](SECURITY.md)
+
+</div>

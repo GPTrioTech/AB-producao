@@ -1,14 +1,28 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="320" viewBox="0 0 1200 320" role="img" aria-labelledby="title desc">
-<title id="title">A&amp;B Produção — Grupo TRIO</title><desc id="desc">Alimentos e Bebidas. Do contrato à operação. Apresentação em bordô e bege.</desc>
-<rect width="1200" height="320" fill="#F9F8F4"/>
-<rect width="12" height="320" fill="#510303"/>
-<g fill="#510303" font-family="Arial, sans-serif">
-<text x="64" y="63" font-size="17" letter-spacing="4">GRUPO TRIO / TECNOLOGIA</text>
-<text x="60" y="166" font-size="76" font-weight="700">A&amp;B Produção</text>
-<text x="64" y="222" font-size="25" fill="#231D1A">Do contrato à operação.</text>
-<text x="64" y="274" font-size="16" fill="#231D1A">CONTRATOS · DEGUSTAÇÃO · MENU FINAL · ORDEM DE SERVIÇO</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="400" viewBox="0 0 1200 400" role="img" aria-labelledby="title desc">
+<title id="title">A&amp;B Produção</title>
+<desc id="desc">Grupo TRIO. Do contrato à operação. Contratos, degustação, Menu Final e Ordem de Serviço.</desc>
+<rect width="1200" height="400" rx="20" fill="#510303"/>
+<path d="M820 0H1180Q1200 0 1200 20V380Q1200 400 1180 400H820Z" fill="#450303"/>
+<circle cx="1130" cy="58" r="210" fill="none" stroke="#6B2525"/>
+<circle cx="1130" cy="58" r="155" fill="none" stroke="#6B2525"/>
+<path d="M56 78H100" stroke="#D3B9A6" stroke-width="3"/>
+<g font-family="Arial, Helvetica, sans-serif" fill="#F9F8F4">
+<text x="116" y="84" font-size="15" letter-spacing="3">GRUPO TRIO / TECNOLOGIA</text>
+<text x="54" y="191" font-size="76" font-weight="700" letter-spacing="-3">A&amp;B Produção</text>
+<text x="58" y="239" font-size="26" fill="#E8D9CF">Do contrato à operação.</text>
+<path d="M58 280H747" stroke="#835050"/>
+<text x="58" y="322" font-size="13" letter-spacing="2" fill="#E8D9CF">ALIMENTOS &amp; BEBIDAS</text>
+<text x="58" y="351" font-size="15">Organização, acompanhamento e revisão humana.</text>
+<text x="866" y="85" font-size="12" letter-spacing="2" fill="#D3B9A6">FLUXO DO EVENTO</text>
 </g>
-<g stroke="#510303" stroke-width="3" fill="none">
-<path d="M960 80V240M960 105H1100M960 160H1100M960 215H1100"/>
-<circle cx="960" cy="105" r="10" fill="#F9F8F4"/><circle cx="960" cy="160" r="10" fill="#F9F8F4"/><circle cx="960" cy="215" r="10" fill="#510303"/>
-</g></svg>
+<path d="M886 124V309" stroke="#835050" stroke-width="2"/>
+<g fill="#510303" stroke="#D3B9A6" stroke-width="2">
+<circle cx="886" cy="128" r="10"/><circle cx="886" cy="190" r="10"/><circle cx="886" cy="252" r="10"/>
+</g>
+<circle cx="886" cy="314" r="11" fill="#F9F8F4"/>
+<path d="m881 314 4 4 7-8" fill="none" stroke="#510303" stroke-width="2"/>
+<g font-family="Arial, Helvetica, sans-serif" font-size="18" fill="#F9F8F4">
+<text x="915" y="135">Contrato</text><text x="915" y="197">Degustação</text>
+<text x="915" y="259">Menu Final</text><text x="915" y="321">Ordem de Serviço</text>
+</g>
+</svg>
