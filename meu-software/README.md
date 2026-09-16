@@ -1,5 +1,9 @@
 # Mini Software A&B
 
+[Apresentação do projeto](../README.md) · [Índice da documentação](docs/README.md) · [Guia de operação](docs/GUIA_OPERACAO.md) · [Guia de implantação](docs/GUIA_IMPLANTACAO.md)
+
+Esta página mantém a referência técnica do snapshot. Para uma visão rápida do produto e dos caminhos de consulta, comece pela apresentação na raiz do repositório.
+
 ## Visão geral
 
 O **Mini Software A&B** é um Web App interno que automatiza o fluxo documental e operacional de Gastronomia/Alimentos & Bebidas de eventos.

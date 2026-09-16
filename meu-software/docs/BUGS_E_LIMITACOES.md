@@ -2,6 +2,18 @@
 
 ## Bugs conhecidos ainda abertos / riscos a validar
 
+### 13. Respostas assíncronas podem ultrapassar a troca de evento
+
+**Identificado por leitura do código em 16/09/2026; ainda sem reprodução no ambiente real.**
+
+Em `frontend/MVP_AB_App.html`, os callbacks de `ensureTabLoaded()` não conferem se a resposta pertence à seleção que originou a consulta. Revisão verifica apenas se existe um evento selecionado; histórico e aditivos também escrevem no cache compartilhado sem conferir o ID. Ao alternar rapidamente entre eventos, uma resposta anterior pode preencher a ficha atual.
+
+**Impacto potencial:** conteúdo de revisão/histórico/aditivos de outro evento exibido na ficha selecionada. Como `saveReview()` usa o `selectedId` atual, a associação incorreta também precisa ser testada antes de permitir gravação.
+
+**Prioridade sugerida:** alta. **Correção proposta:** vincular cada resposta ao ID e à geração da seleção, descartando resultados e erros obsoletos, inclusive na sequência A → B → A.
+
+**Aceite:** simular respostas fora de ordem nas três abas e confirmar que apenas a seleção atual pode alterar cache, interface e dados de revisão. Nenhuma correção de código foi aplicada nesta revisão editorial.
+
 ### 1. Estágio `DEPOIS_DEGUSTACAO` valida apenas existência do Form Cliente
 
 **Sintoma:** um aditivo pode ser aceito como “Depois da degustação” se `FORM_CLIENTE_ID` existir, mesmo que o cliente ainda não tenha respondido.  

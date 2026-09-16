@@ -21,6 +21,11 @@
 
 ## Alta prioridade
 
+### 23. Isolar respostas atrasadas na navegação entre eventos
+**Estado:** identificado em análise estática dos callbacks de `ensureTabLoaded()`; não corrigido nem reproduzido no ambiente Google nesta revisão.
+**Critério de aceite:** revisão, histórico e aditivos ignoram respostas e erros de seleções anteriores, incluindo A → B → A; nenhuma revisão de outro evento pode ser salva no ID atual.
+**Referência:** [Bugs e limitações — item 13](BUGS_E_LIMITACOES.md#13-respostas-assíncronas-podem-ultrapassar-a-troca-de-evento).
+
 ### 4. Corrigir validação de “Depois da degustação”
 **Estado:** exige apenas `FORM_CLIENTE_ID`.  
 **Critério de aceite:** exigir resposta Cliente efetivamente processada/Relatório ou estado equivalente.

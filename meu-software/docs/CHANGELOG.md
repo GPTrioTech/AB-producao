@@ -1,5 +1,15 @@
 # CHANGELOG.md
 
+## 16/09/2026 — Apresentação e documentação no GitHub
+
+- README na raiz com visão do produto, fluxo, arquitetura e acesso aos guias.
+- Capa visual em bordô e bege para a apresentação do projeto.
+- Índice de documentação e guias de operação e implantação.
+- Orientações de contribuição e registro de validação.
+- Risco de respostas atrasadas entre eventos registrado a partir de análise estática.
+
+Revisão exclusivamente documental: backend V23.1, controller/HTML V23.2 e reset preservados. Links locais e SVG conferidos; smoke test operacional não executado, pois não houve alteração nem acesso à implantação Google nesta revisão.
+
 > Reconstrução baseada nos artefatos e decisões da conversa. Datas exatas de cada versão não são essenciais; a ordem é confiável. A baseline atual é a combinação Backend V23.1 + Front V23.2.
 
 ## MVP inicial

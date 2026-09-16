@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="320" viewBox="0 0 1200 320" role="img" aria-labelledby="title desc">
+<title id="title">A&amp;B Produção — Grupo TRIO</title><desc id="desc">Alimentos e Bebidas. Do contrato à operação. Apresentação em bordô e bege.</desc>
+<rect width="1200" height="320" fill="#F9F8F4"/>
+<rect width="12" height="320" fill="#510303"/>
+<g fill="#510303" font-family="Arial, sans-serif">
+<text x="64" y="63" font-size="17" letter-spacing="4">GRUPO TRIO / TECNOLOGIA</text>
+<text x="60" y="166" font-size="76" font-weight="700">A&amp;B Produção</text>
+<text x="64" y="222" font-size="25" fill="#231D1A">Do contrato à operação.</text>
+<text x="64" y="274" font-size="16" fill="#231D1A">CONTRATOS · DEGUSTAÇÃO · MENU FINAL · ORDEM DE SERVIÇO</text>
+</g>
+<g stroke="#510303" stroke-width="3" fill="none">
+<path d="M960 80V240M960 105H1100M960 160H1100M960 215H1100"/>
+<circle cx="960" cy="105" r="10" fill="#F9F8F4"/><circle cx="960" cy="160" r="10" fill="#F9F8F4"/><circle cx="960" cy="215" r="10" fill="#510303"/>
+</g></svg>
