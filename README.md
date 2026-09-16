@@ -1,6 +1,6 @@
 <div align="center">
 
-![A&B Produção — Do contrato à operação](docs/ab-producao.svg?v=2)
+![A&B Produção — Do contrato à operação](docs/ab-producao-capa.svg)
 
 **Gestão de Alimentos & Bebidas · Grupo TRIO**
 
